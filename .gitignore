@@ -1,1 +1,8 @@
-.idea
+# Ignoring IDE directories and files
+.idea/
+.cache/
+
+# Ignoring Python cache directories and files
+__pycache__/
+*.py[cod]
+*$py.class
