@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'debug_toolbar',
+    'rest_framework',
 
     'map_apps.users.apps.UsersConfig',
     'map_apps.achievements.apps.AchievementsConfig',
@@ -145,3 +146,10 @@ MEDIA_ROOT = BASE_DIR / 'map_project/media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+# Rest
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10
+# }

@@ -21,6 +21,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('map_apps.users.urls')),
+    path('achievements/', include('map_apps.achievements.urls')),
 ]
 
 if settings.DEBUG:
