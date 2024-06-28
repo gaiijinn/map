@@ -28,5 +28,5 @@ class AchievementsProgressStatus(models.Model):
     is_achieved = models.BooleanField(default=False)
 
     def __str__(self):
-        return (f'{self.achievement.achievement_name} | status = {self.is_achieved}, '
+        return (f'{self.user.get_full_name()} | {self.achievement.achievement_name} | status = {self.is_achieved}, '
                 f'{self.progress_rn}/{self.achievement.final_value}')

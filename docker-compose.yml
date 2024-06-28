@@ -13,7 +13,8 @@ services:
       - DB_USER=admin
       - DB_NAME=city_map
       - DB_PASSWORD=admin
-
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - database
 
@@ -23,4 +24,32 @@ services:
       - POSTGRES_DB=city_map
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+
+  redis:
+    image: redis:7.0-alpine
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    environment:
+      - DB_HOST=database
+      - DB_USER=admin
+      - DB_NAME=city_map
+      - DB_PASSWORD=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./map_project:/service
+    command: -A map worker -l info
+    links:
+      - database
+      - redis
+    depends_on:
+      - redis
+      - database
 
