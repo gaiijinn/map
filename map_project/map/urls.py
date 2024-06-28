@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('map_apps.users.urls')),
     path('achievements/', include('map_apps.achievements.urls')),
+    #path('organization/', include('map_apps.organizations.urls')),
 ]
 
 if settings.DEBUG:

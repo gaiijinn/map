@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'map_apps.users.apps.UsersConfig',
     'map_apps.achievements.apps.AchievementsConfig',
+    'map_apps.organizations.apps.OrganizationsConfig',
 ]
 
 MIDDLEWARE = [
