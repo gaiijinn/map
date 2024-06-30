@@ -43,10 +43,13 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'rest_framework',
+    'djoser',
+    'rest_framework.authtoken',
 
     'map_apps.users.apps.UsersConfig',
     'map_apps.achievements.apps.AchievementsConfig',
     'map_apps.organizations.apps.OrganizationsConfig',
+    'map_apps.events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [
@@ -150,10 +153,13 @@ AUTH_USER_MODEL = 'users.User'
 
 # Rest
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 10
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 
 # Redis
