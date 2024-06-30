@@ -23,9 +23,6 @@ urlpatterns = [
     path('users/', include('map_apps.users.urls')),
     path('achievements/', include('map_apps.achievements.urls')),
     #path('organization/', include('map_apps.organizations.urls')),
-
-    path('api/auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
 
 if settings.DEBUG:

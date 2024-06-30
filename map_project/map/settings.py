@@ -43,8 +43,6 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'rest_framework',
-    'djoser',
-    'rest_framework.authtoken',
 
     'map_apps.users.apps.UsersConfig',
     'map_apps.achievements.apps.AchievementsConfig',
