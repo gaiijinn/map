@@ -104,23 +104,25 @@ class RejectedEvents(models.Model):
 class UnverifiedEvents(models.Model):
     """Model to moderate events"""
     STATUS_RESULT = (
-        ('aproved', 'Підтверджено'),
-        ('not_aproved', 'Не підтверджено'),
-        ('in_revue', 'На перевірці'),
+        ('Підтверджено', 'Підтверджено'),
+        ('Відмова', 'Відмова'),
+        ('На перевірці', 'На перевірці'),
     )
 
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE)
-    result_revue = models.CharField(choices=STATUS_RESULT, default='in_revue', max_length=64)
+    result_revue = models.CharField(choices=STATUS_RESULT, default='На перевірці', max_length=64)
 
     recieved = models.DateTimeField(auto_now_add=True)
     is_repeatable = models.BooleanField(default=True)
     feedback = models.CharField(max_length=1024, blank=True, null=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.result_revue == 'aproved':
-            VerifiedEvents.objects.create(event=self)
-        if self.result_revue == 'not_aproved':
-            RejectedEvents.objects.create(event=self)
+        if self.result_revue == 'Підтверджено':
+            VerifiedEvents.objects.create(event=self.event)
+            #self.delete()
+        if self.result_revue == 'Відмова':
+            if not RejectedEvents.objects.filter(event=self).exists():
+                RejectedEvents.objects.create(event=self)
         return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     def __str__(self):
