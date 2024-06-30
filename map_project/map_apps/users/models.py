@@ -45,11 +45,12 @@ class UserLevel(models.Model):
     low_range = models.PositiveSmallIntegerField(validators=[MinValueValidator(0)])
     top_range = models.PositiveSmallIntegerField()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        if self.low_range > self.top_range:
-            raise ValidationError('top range must be > low range')
-        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+    def clean(self):
+        """Validation for the level range"""
+        if self.low_range > self.top_range or self.low_range == self.top_range:
+            raise ValidationError({
+                'top_range': 'Число верхньої границі повинно бути більшою за меншу границю'
+            })
 
     def __str__(self):
         return f'{self.level_name}'
@@ -62,6 +63,7 @@ class User(AbstractUser):
 
     is_org = models.BooleanField(default=False)
     is_verif = models.BooleanField(default=False)
+    rating = models.PositiveSmallIntegerField(default=0, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -82,7 +84,7 @@ class UserProfile(models.Model):
                                         blank=True)
     user_level = models.ForeignKey(to=UserLevel, on_delete=models.CASCADE, related_name='userprofile', blank=True, null=True)
     about_me = models.CharField(max_length=512, blank=True, null=True)
-    inst_link = models.CharField(max_length=128, blank=True, null=True)
+    inst_link = models.URLField(max_length=256, blank=True, null=True)
     want_newsletters = models.BooleanField(default=False)
 
 

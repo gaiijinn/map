@@ -16,8 +16,8 @@ class Organizations(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='organizations')
     org_type = models.ForeignKey(to=OrgTypes, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
-    address = models.CharField(max_length=256)
-    about_us = models.CharField(max_length=512)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    about_us = models.CharField(max_length=512, null=True, blank=True)
 
 
 class OrganizationImgs(models.Model):
