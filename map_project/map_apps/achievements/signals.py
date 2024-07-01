@@ -3,6 +3,7 @@ from django.dispatch import receiver
 
 from ..users.models import User
 from .models import Achievements, AchievementsProgressStatus
+from .tasks import check_achievements_status
 
 
 @receiver(post_save, sender=Achievements)
@@ -19,3 +20,9 @@ def set_new_achievement(sender, instance, created, **kwargs):
         ]
 
         AchievementsProgressStatus.objects.bulk_create(achievement_progress_list)
+
+
+@receiver(post_save, sender=AchievementsProgressStatus)
+def check_status(sender, instance, created, **kwargs):
+    if not created:
+        check_achievements_status.delay(instance.id)

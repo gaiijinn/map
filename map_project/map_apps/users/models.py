@@ -55,15 +55,19 @@ class UserLevel(models.Model):
     def __str__(self):
         return f'{self.level_name}'
 
+    class Meta:
+        verbose_name = 'Тип рівня користувача'
+        verbose_name_plural = 'Рівні користувачів'
+
 
 class User(AbstractUser):
     """Updated user model"""
     username = None
-    email = models.EmailField(_("email address"), unique=True)
+    email = models.EmailField(_("Електронна адреса"), unique=True)
 
-    is_org = models.BooleanField(default=False)
-    is_verif = models.BooleanField(default=False)
-    rating = models.PositiveSmallIntegerField(default=0, blank=True)
+    is_org = models.BooleanField(_("Зареєстрований як організація"),default=False)
+    is_verif = models.BooleanField(_("Верифікований"), default=False)
+    rating = models.PositiveSmallIntegerField(_("Рейтинг"), default=0, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -76,25 +80,30 @@ class User(AbstractUser):
     def get_short_name(self):
         return self.email.split('@')[0]
 
+    class Meta:
+        verbose_name = 'Користувача'
+        verbose_name_plural = 'Користувачі'
+
 
 class UserProfile(models.Model):
     """Models to save the user additional info"""
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='userprofile')
-    profile_picture = models.ImageField(upload_to='users/profile_picture/',
-                                        blank=True)
-    user_level = models.ForeignKey(to=UserLevel, on_delete=models.CASCADE, related_name='userprofile', blank=True, null=True)
-    about_me = models.CharField(max_length=512, blank=True, null=True)
-    inst_link = models.URLField(max_length=256, blank=True, null=True)
-    want_newsletters = models.BooleanField(default=False)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='userprofile', verbose_name=_('Користувач'))
+    profile_picture = models.ImageField(_("Фото користувача"), upload_to='users/profile_picture/',
+                                        blank=True,)
+    user_level = models.ForeignKey(to=UserLevel, on_delete=models.CASCADE, related_name='userprofile',
+                                   blank=True, null=True, verbose_name=_('Рівень користувача'))
+    about_me = models.CharField(_("Про себе"), max_length=512, blank=True, null=True)
+    inst_link = models.URLField(_("Instagram посилання"), max_length=256, blank=True, null=True)
+    want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
 
 
 class UserVerification(models.Model):
     """Base email verif model with uuid4"""
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    code = models.UUIDField(default=uuid.uuid4)
-    created_at = models.DateTimeField(auto_now_add=True)
-    expired_at = models.DateTimeField()
-    verif_to = models.DateTimeField()
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name=_('Користувач'))
+    code = models.UUIDField(_("Код"), default=uuid.uuid4)
+    created_at = models.DateTimeField(_("Створено"), auto_now_add=True)
+    expired_at = models.DateTimeField(_("Дійсний до"),)
+    verif_to = models.DateTimeField(_("Активовано до"),)
 
     def check_if_expired(self):
         return True if now() < self.expired_at else False
