@@ -1,4 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import gettext as _
 from django.db import models
 
 from ..users.models import User
@@ -25,7 +26,7 @@ class AchievementsProgressStatus(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='achievementsprogressstatus')
     achievement = models.ForeignKey(to=Achievements, on_delete=models.CASCADE, related_name='achievementsprogressstatus')
     progress_rn = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0)])
-    is_achieved = models.BooleanField(default=False)
+    is_achieved = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
         return (f'{self.user.get_full_name()} | {self.achievement.achievement_name} | status = {self.is_achieved}, '

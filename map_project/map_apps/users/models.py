@@ -65,7 +65,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_("Електронна адреса"), unique=True)
 
-    is_org = models.BooleanField(_("Зареєстрований як організація"),default=False)
+    is_org = models.BooleanField(_("Зареєстрований як організація"), default=False, db_index=True)
     is_verif = models.BooleanField(_("Верифікований"), default=False)
     rating = models.PositiveSmallIntegerField(_("Рейтинг"), default=0, blank=True)
 

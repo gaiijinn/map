@@ -54,25 +54,26 @@ class Events(models.Model):
         ('+18', '+18'),
     )
 
-    creator = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='events')
-    event_type = models.ForeignKey(to=EventTypes, on_delete=models.CASCADE, related_name='events')
+    creator = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='events', verbose_name=_('Власник'))
+    event_type = models.ForeignKey(to=EventTypes, on_delete=models.CASCADE, related_name='events',
+                                   verbose_name=_('Тип події'))
 
     event_guests = models.ManyToManyField(User, through=EventGuests, related_name='event_guests')
     event_reports = models.ManyToManyField(EventReportTypes, through=EventReports, related_name='event_reports')
 
-    event_status = models.CharField(choices=EVENT_STATUS_CHOICES, default='not_started', max_length=32)
-    event_age = models.CharField(choices=EVENT_AGE_CHOICES, default='+0', max_length=4)
+    event_status = models.CharField(_("Статус події"), choices=EVENT_STATUS_CHOICES, default='not_started', max_length=32, db_index=True)
+    event_age = models.CharField(_("Вікові обмеження"), choices=EVENT_AGE_CHOICES, default='+0', max_length=4, db_index=True)
 
-    begin_day = models.DateField()
-    begin_time = models.TimeField()
-    end_time = models.TimeField()
+    begin_day = models.DateField(_("День проведення"))
+    begin_time = models.TimeField(_("Час початку проведення події"))
+    end_time = models.TimeField(_("Час кінця проведення події"))
 
-    name = models.CharField(max_length=256)
-    address = models.CharField(max_length=256)
-    description = models.CharField(max_length=512)
-    coordinates = models.JSONField()
-    price = models.PositiveSmallIntegerField(blank=True, default=0)
-    created_by_org = models.BooleanField(default=False)
+    name = models.CharField(_("Назва події"), max_length=256, db_index=True)
+    address = models.CharField(_("Адреса проведення"), max_length=256)
+    description = models.CharField(_("Опис події"), max_length=512)
+    coordinates = models.JSONField(_("Координати"))
+    price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
+    created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
 
     def clean(self):
         """Validation before saving object"""
@@ -82,6 +83,11 @@ class Events(models.Model):
                 'end_time': _('Час кінця події повинен буде більшим за початок')
             })
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['event_status', 'event_age']),
+        ]
+
 
 class EventImgs(models.Model):
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE, related_name='eventimgs')
@@ -89,6 +95,7 @@ class EventImgs(models.Model):
 
 
 class VerifiedEvents(models.Model):
+    """From here we take all events to put it on map"""
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE)
     verified_date = models.DateTimeField(auto_now_add=True)
 
@@ -97,6 +104,7 @@ class VerifiedEvents(models.Model):
 
 
 class RejectedEvents(models.Model):
+    """If rejected event can be repeatable """
     event = models.ForeignKey(to='UnverifiedEvents', on_delete=models.CASCADE)
     unverified_date = models.DateTimeField(auto_now_add=True)
 
@@ -115,6 +123,7 @@ class UnverifiedEvents(models.Model):
     recieved = models.DateTimeField(auto_now_add=True)
     is_repeatable = models.BooleanField(default=True)
     feedback = models.CharField(max_length=1024, blank=True, null=True)
+    #надо добавить приоритет фолс чтобы когда чел отредал ивент модеры быстрее его обработали
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.result_revue == 'Підтверджено':

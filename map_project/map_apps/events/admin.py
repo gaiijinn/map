@@ -24,40 +24,51 @@ class UnverifiedEventsAdmin(admin.ModelAdmin):
                        'name', 'address', 'description', 'created_by_org')
     ordering = ('recieved', )
     list_filter = ('result_revue', 'recieved')
-    search_fields = ('event_name', )
+    search_fields = ('event__name', )
 
     def event_name(self, obj):
         return obj.event.name
+    event_name.short_description = Events._meta.get_field('name').verbose_name
 
     def event_type(self, obj):
         return obj.event.event_type.name
+    event_type.short_description = Events._meta.get_field('event_type').verbose_name
 
     def event_age(self, obj):
         return obj.event.event_age
+    event_age.short_description = Events._meta.get_field('event_age').verbose_name
 
     def event_price(self, obj):
         return obj.event.price
+    event_price.short_description = Events._meta.get_field('price').verbose_name
 
     def event_begin_day(self, obj):
         return obj.event.begin_day
+    event_begin_day.short_description = Events._meta.get_field('begin_day').verbose_name
 
     def event_begin_time(self, obj):
         return obj.event.begin_time
+    event_begin_time.short_description = Events._meta.get_field('begin_time').verbose_name
 
     def event_end_time(self, obj):
         return obj.event.end_time
+    event_end_time.short_description = Events._meta.get_field('end_time').verbose_name
 
     def name(self, obj):
         return obj.event.name
+    name.short_description = Events._meta.get_field('name').verbose_name
 
     def address(self, obj):
         return obj.event.address
+    address.short_description = Events._meta.get_field('address').verbose_name
 
     def description(self, obj):
         return obj.event.description
+    description.short_description = Events._meta.get_field('description').verbose_name
 
     def created_by_org(self, obj):
         return obj.event.created_by_org
+    created_by_org.short_description = Events._meta.get_field('created_by_org').verbose_name
 
     fieldsets = (
         ('Подія основа', {
@@ -81,6 +92,7 @@ class UnverifiedEventsAdmin(admin.ModelAdmin):
             'classes': ('wide',),
         }),
     )
+
 
 
 @admin.register(RejectedEvents)
