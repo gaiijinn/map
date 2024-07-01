@@ -121,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-#LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'uk'
 
 TIME_ZONE = 'UTC'
@@ -157,9 +156,9 @@ AUTH_USER_MODEL = 'users.User'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework.authentication.TokenAuthentication',
-    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #         'rest_framework.authentication.TokenAuthentication',
+    # ],
 }
 
 
@@ -181,3 +180,11 @@ CACHES = {
 
 CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
 CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+
+# Email
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'vladruban8@gmail.com'
+EMAIL_HOST_PASSWORD = 'cyzc nrjx vfob tbye'
+EMAIL_USE_SSL = True

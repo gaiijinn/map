@@ -25,7 +25,7 @@ class EventsHistoryAdmin(SimpleHistoryAdmin):
     )
     search_fields = ('name',)
     list_filter = ('created_at', 'result_revue', 'is_repeatable', 'created_by_org')
-    readonly_fields = ('created_at', 'display_images', 'display_event_reports')
+    readonly_fields = ('created_at', 'display_images')
 
     history_list_display = ('result_revue', 'feedback')
 
@@ -50,10 +50,10 @@ class EventsHistoryAdmin(SimpleHistoryAdmin):
             'fields': ('result_revue', 'feedback', 'last_time_updated', 'is_repeatable'),
             'classes': ('wide',),
         }),
-        ('Скарги на подію', {
-            'fields': ('display_event_reports',),
-            'classes': ('wide',),
-        }),
+        # ('Скарги на подію', {
+        #     'fields': ('display_event_reports',),
+        #     'classes': ('wide',),
+        # }),
     )
 
     def display_images(self, obj):
@@ -65,16 +65,6 @@ class EventsHistoryAdmin(SimpleHistoryAdmin):
                     img in images)
             )
         return 'Пусто'
-
-    def display_event_reports(self, obj):
-        reports = obj.event_reports.all()
-        if reports:
-            return format_html(
-                '<br>'.join(
-                    '{}'.format(f'{report.name}') for report in reports
-                )
-            )
-        return 'Скарги відсутні'
 
 
 admin.site.register(Events, EventsHistoryAdmin)

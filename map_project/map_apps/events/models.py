@@ -70,8 +70,10 @@ class Events(models.Model):
     event_guests = models.ManyToManyField(User, through=EventGuests, related_name='event_guests')
     event_reports = models.ManyToManyField(EventReportTypes, through=EventReports, related_name='event_reports')
 
-    event_status = models.CharField(_("Статус події"), choices=EVENT_STATUS_CHOICES, default='not_started', max_length=32, db_index=True)
-    event_age = models.CharField(_("Вікові обмеження"), choices=EVENT_AGE_CHOICES, default='+0', max_length=4, db_index=True)
+    event_status = models.CharField(_("Статус події"), choices=EVENT_STATUS_CHOICES, default='not_started',
+                                    max_length=32, db_index=True)
+    event_age = models.CharField(_("Вікові обмеження"), choices=EVENT_AGE_CHOICES, default='+0', max_length=4,
+                                 db_index=True)
 
     begin_day = models.DateField(_("День проведення"))
     begin_time = models.TimeField(_("Час початку проведення події"))
@@ -85,7 +87,8 @@ class Events(models.Model):
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
 
     # for admin
-    result_revue = models.CharField(_("Статус перевірки"), choices=STATUS_REVUE, default='На перевірці', max_length=64)
+    result_revue = models.CharField(_("Статус перевірки"), choices=STATUS_REVUE, default='На перевірці',
+                                    max_length=64, db_index=True)
     feedback = models.CharField(_("Відгук модератора"), max_length=1024, blank=True, null=True)
     created_at = models.DateTimeField(_("Подію створено"), auto_now_add=True)
     last_time_updated = models.DateTimeField(_("Подію редаговано"), null=True, blank=True)
@@ -110,3 +113,4 @@ class Events(models.Model):
 class EventImgs(models.Model):
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE, related_name='eventimgs')
     img = models.ImageField(upload_to='events')
+

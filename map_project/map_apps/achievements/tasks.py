@@ -4,6 +4,7 @@ from django.db import transaction
 
 @shared_task
 def check_achievements_status(obj_id):
+    """Tracking progress to set current is_achieved value"""
     from .models import AchievementsProgressStatus
 
     obj = AchievementsProgressStatus.objects.filter(id=obj_id).first()
