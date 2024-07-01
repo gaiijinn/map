@@ -2,6 +2,7 @@ from django.db import models
 from ..users.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 # Create your models here.
 
@@ -27,6 +28,8 @@ class EventReportTypes(models.Model):
 class EventReports(models.Model):
     event = models.ForeignKey('Events', on_delete=models.CASCADE)
     report = models.ForeignKey(EventReportTypes, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    #date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.event.name} | {self.report.name}"
@@ -54,6 +57,12 @@ class Events(models.Model):
         ('+18', '+18'),
     )
 
+    STATUS_REVUE = (
+        ('Підтверджено', 'Підтверджено'),
+        ('Відмова', 'Відмова'),
+        ('На перевірці', 'На перевірці'),
+    )
+
     creator = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='events', verbose_name=_('Власник'))
     event_type = models.ForeignKey(to=EventTypes, on_delete=models.CASCADE, related_name='events',
                                    verbose_name=_('Тип події'))
@@ -75,6 +84,15 @@ class Events(models.Model):
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
 
+    # for admin
+    result_revue = models.CharField(_("Статус перевірки"), choices=STATUS_REVUE, default='На перевірці', max_length=64)
+    feedback = models.CharField(_("Відгук модератора"), max_length=1024, blank=True, null=True)
+    created_at = models.DateTimeField(_("Подію створено"), auto_now_add=True)
+    last_time_updated = models.DateTimeField(_("Подію редаговано"), null=True, blank=True)
+    is_repeatable = models.BooleanField(_("Дозволити пройти модерацію ще раз?"), default=True)
+
+    history = HistoricalRecords()
+
     def clean(self):
         """Validation before saving object"""
         super().clean()
@@ -92,47 +110,3 @@ class Events(models.Model):
 class EventImgs(models.Model):
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE, related_name='eventimgs')
     img = models.ImageField(upload_to='events')
-
-
-class VerifiedEvents(models.Model):
-    """From here we take all events to put it on map"""
-    event = models.ForeignKey(to=Events, on_delete=models.CASCADE)
-    verified_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.event.name}"
-
-
-class RejectedEvents(models.Model):
-    """If rejected event can be repeatable """
-    event = models.ForeignKey(to='UnverifiedEvents', on_delete=models.CASCADE)
-    unverified_date = models.DateTimeField(auto_now_add=True)
-
-
-class UnverifiedEvents(models.Model):
-    """Model to moderate events"""
-    STATUS_RESULT = (
-        ('Підтверджено', 'Підтверджено'),
-        ('Відмова', 'Відмова'),
-        ('На перевірці', 'На перевірці'),
-    )
-
-    event = models.ForeignKey(to=Events, on_delete=models.CASCADE)
-    result_revue = models.CharField(choices=STATUS_RESULT, default='На перевірці', max_length=64)
-
-    recieved = models.DateTimeField(auto_now_add=True)
-    is_repeatable = models.BooleanField(default=True)
-    feedback = models.CharField(max_length=1024, blank=True, null=True)
-    #надо добавить приоритет фолс чтобы когда чел отредал ивент модеры быстрее его обработали
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.result_revue == 'Підтверджено':
-            VerifiedEvents.objects.create(event=self.event)
-            #self.delete()
-        if self.result_revue == 'Відмова':
-            if not RejectedEvents.objects.filter(event=self).exists():
-                RejectedEvents.objects.create(event=self)
-        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
-
-    def __str__(self):
-        return f"{self.event.name} | {self.result_revue}"

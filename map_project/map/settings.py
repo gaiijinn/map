@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'rest_framework',
+    'simple_history',
 
     'map_apps.users.apps.UsersConfig',
     'map_apps.achievements.apps.AchievementsConfig',
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'map.urls'

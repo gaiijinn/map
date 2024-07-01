@@ -6,6 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
+from simple_history.models import HistoricalRecords
 
 # Create your models here.
 
@@ -95,6 +96,7 @@ class UserProfile(models.Model):
     about_me = models.CharField(_("Про себе"), max_length=512, blank=True, null=True)
     inst_link = models.URLField(_("Instagram посилання"), max_length=256, blank=True, null=True)
     want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
+    history = HistoricalRecords()
 
 
 class UserVerification(models.Model):
