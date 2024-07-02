@@ -42,6 +42,16 @@ class EventTypes(models.Model):
         return f'{self.name}'
 
 
+class EventStatusEmail(models.Model):
+    """Model to track if event status was emailed to user only 1 time"""
+    event = models.ForeignKey('Events', on_delete=models.CASCADE, related_name='eventstatusemail', verbose_name='Подія')
+    status = models.CharField(_("Статус події"), max_length=64)
+    feedback = models.CharField(max_length=1024, null=True, default='')
+
+    def __str__(self):
+        return f"{self.event.name} | {self.status}"
+
+
 class Events(models.Model):
     EVENT_STATUS_CHOICES = (
         ('not_started', 'Не почато'),
@@ -103,14 +113,25 @@ class Events(models.Model):
             raise ValidationError({
                 'end_time': _('Час кінця події повинен буде більшим за початок')
             })
+        if self.result_revue == 'Відмова' and self.feedback is None:
+            raise ValidationError({
+                'feedback': _('Результат перевірки при відмові не повинен бути пустим!')
+            })
 
     class Meta:
         indexes = [
             models.Index(fields=['event_status', 'event_age']),
         ]
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.result_revue != 'На перевірці':
+            obj, created = EventStatusEmail.objects.get_or_create(event=self, status=self.result_revue, feedback=self.feedback)
+        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+
 
 class EventImgs(models.Model):
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE, related_name='eventimgs')
     img = models.ImageField(upload_to='events')
+
+
 
