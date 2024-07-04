@@ -4,7 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from .models import User, UserVerification
+from .models import User, UserProfile, UserVerification
+from .tasks import level_calculating
 
 
 @receiver(post_save, sender=UserVerification)
@@ -17,7 +18,7 @@ def set_expired_time(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def set_achievement_user(sender, instance, created, **kwargs):
-    """Set achievements for User after success reg"""
+    """Set achievements for User after success reg or level calculating"""
     if created:
         if instance.is_org:
             achievements = Achievements.objects.filter(for_organization=True)
@@ -30,3 +31,8 @@ def set_achievement_user(sender, instance, created, **kwargs):
         ]
 
         AchievementsProgressStatus.objects.bulk_create(achievement_progress_list)
+
+
+# @receiver(post_save, sender=UserProfile)
+# def set_user_level(sender, instance, created, **kwargs):
+#     level_calculating(instance.user.id)

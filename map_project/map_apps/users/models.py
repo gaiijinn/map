@@ -8,6 +8,8 @@ from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from simple_history.models import HistoricalRecords
 
+from .tasks import level_calculating
+
 # Create your models here.
 
 
@@ -97,6 +99,9 @@ class UserProfile(models.Model):
     inst_link = models.URLField(_("Instagram посилання"), max_length=256, blank=True, null=True)
     want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} | {self.user_level}"
 
 
 class UserVerification(models.Model):

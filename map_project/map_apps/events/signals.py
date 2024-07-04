@@ -1,8 +1,9 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Events, EventGuests, EventStatusEmail
-from .tasks import task_reject_event_email
 from django.utils.timezone import now
+
+from .models import EventGuests, Events, EventStatusEmail
+from .tasks import task_reject_event_email
 
 
 @receiver(post_save, sender=Events)

@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ..users.models import User
+from ..users.tasks import level_calculating
 from .models import Achievements, AchievementsProgressStatus
 from .tasks import check_achievements_status
 
@@ -24,5 +25,6 @@ def set_new_achievement(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=AchievementsProgressStatus)
 def check_status(sender, instance, created, **kwargs):
+    """From here we check the achievement status and set the actual user level"""
     if not created:
         check_achievements_status.delay(instance.id)

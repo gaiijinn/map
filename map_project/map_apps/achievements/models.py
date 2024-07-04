@@ -1,5 +1,4 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.utils.translation import gettext as _
 from django.db import models
 
 from ..users.models import User
@@ -29,5 +28,5 @@ class AchievementsProgressStatus(models.Model):
     is_achieved = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
-        return (f'{self.user.get_full_name()} | {self.achievement.achievement_name} | status = {self.is_achieved}, '
+        return (f'{self.user.get_full_name()} | {self.achievement.achievement_name} | Виконано = {self.is_achieved}, '
                 f'{self.progress_rn}/{self.achievement.final_value}')

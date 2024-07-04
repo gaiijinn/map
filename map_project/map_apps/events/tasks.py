@@ -1,6 +1,7 @@
 from celery import shared_task
-from .services import send_reject_event_email, send_approved_event_email
+
 from .models import Events
+from .services import send_approved_event_email, send_reject_event_email
 
 
 @shared_task
