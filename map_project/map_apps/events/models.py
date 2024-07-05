@@ -9,11 +9,11 @@ from ..users.models import User
 
 
 class EventGuests(models.Model):
-    event = models.ForeignKey('Events', on_delete=models.CASCADE)
+    event = models.ForeignKey("Events", on_delete=models.CASCADE)
     guest = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('event', 'guest')
+        unique_together = ("event", "guest")
 
     def __str__(self):
         return f"{self.event.name} | {self.guest.get_full_name()}"
@@ -23,14 +23,14 @@ class EventReportTypes(models.Model):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
 
 class EventReports(models.Model):
-    event = models.ForeignKey('Events', on_delete=models.CASCADE)
+    event = models.ForeignKey("Events", on_delete=models.CASCADE)
     report = models.ForeignKey(EventReportTypes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    #date = models.DateTimeField(auto_now_add=True)
+    # date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.event.name} | {self.report.name}"
@@ -40,14 +40,20 @@ class EventTypes(models.Model):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
 
 class EventStatusEmail(models.Model):
     """Model to track if event status was emailed to user only 1 time"""
-    event = models.ForeignKey('Events', on_delete=models.CASCADE, related_name='eventstatusemail', verbose_name='Подія')
+
+    event = models.ForeignKey(
+        "Events",
+        on_delete=models.CASCADE,
+        related_name="eventstatusemail",
+        verbose_name="Подія",
+    )
     status = models.CharField(_("Статус події"), max_length=64)
-    feedback = models.CharField(max_length=1024, null=True, default='')
+    feedback = models.CharField(max_length=1024, null=True, default="")
 
     def __str__(self):
         return f"{self.event.name} | {self.status}"
@@ -55,36 +61,59 @@ class EventStatusEmail(models.Model):
 
 class Events(models.Model):
     EVENT_STATUS_CHOICES = (
-        ('not_started', 'Не почато'),
-        ('in_process', 'Проходить'),
-        ('ended', 'Завершилось'),
+        ("not_started", "Не почато"),
+        ("in_process", "Проходить"),
+        ("ended", "Завершилось"),
     )
 
     EVENT_AGE_CHOICES = (
-        ('+0', '+0'),
-        ('+6', '+6'),
-        ('+12', '+12'),
-        ('+16', '+16'),
-        ('+18', '+18'),
+        ("+0", "+0"),
+        ("+6", "+6"),
+        ("+12", "+12"),
+        ("+16", "+16"),
+        ("+18", "+18"),
     )
 
     STATUS_REVUE = (
-        ('Підтверджено', 'Підтверджено'),
-        ('Відмова', 'Відмова'),
-        ('На перевірці', 'На перевірці'),
+        ("Підтверджено", "Підтверджено"),
+        ("Відмова", "Відмова"),
+        ("На перевірці", "На перевірці"),
     )
 
-    creator = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='events', verbose_name=_('Власник'))
-    event_type = models.ForeignKey(to=EventTypes, on_delete=models.CASCADE, related_name='events',
-                                   verbose_name=_('Тип події'))
+    creator = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name="events",
+        verbose_name=_("Власник"),
+    )
+    event_type = models.ForeignKey(
+        to=EventTypes,
+        on_delete=models.CASCADE,
+        related_name="events",
+        verbose_name=_("Тип події"),
+    )
 
-    event_guests = models.ManyToManyField(User, through=EventGuests, related_name='event_guests')
-    event_reports = models.ManyToManyField(EventReportTypes, through=EventReports, related_name='event_reports')
+    event_guests = models.ManyToManyField(
+        User, through=EventGuests, related_name="event_guests"
+    )
+    event_reports = models.ManyToManyField(
+        EventReportTypes, through=EventReports, related_name="event_reports"
+    )
 
-    event_status = models.CharField(_("Статус події"), choices=EVENT_STATUS_CHOICES, default='not_started',
-                                    max_length=32, db_index=True)
-    event_age = models.CharField(_("Вікові обмеження"), choices=EVENT_AGE_CHOICES, default='+0', max_length=4,
-                                 db_index=True)
+    event_status = models.CharField(
+        _("Статус події"),
+        choices=EVENT_STATUS_CHOICES,
+        default="not_started",
+        max_length=32,
+        db_index=True,
+    )
+    event_age = models.CharField(
+        _("Вікові обмеження"),
+        choices=EVENT_AGE_CHOICES,
+        default="+0",
+        max_length=4,
+        db_index=True,
+    )
 
     begin_day = models.DateField(_("День проведення"))
     begin_time = models.TimeField(_("Час початку проведення події"))
@@ -98,12 +127,23 @@ class Events(models.Model):
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
 
     # for admin
-    result_revue = models.CharField(_("Статус перевірки"), choices=STATUS_REVUE, default='На перевірці',
-                                    max_length=64, db_index=True)
-    feedback = models.CharField(_("Відгук модератора"), max_length=1024, blank=True, null=True)
+    result_revue = models.CharField(
+        _("Статус перевірки"),
+        choices=STATUS_REVUE,
+        default="На перевірці",
+        max_length=64,
+        db_index=True,
+    )
+    feedback = models.CharField(
+        _("Відгук модератора"), max_length=1024, blank=True, null=True
+    )
     created_at = models.DateTimeField(_("Подію створено"), auto_now_add=True)
-    last_time_updated = models.DateTimeField(_("Подію редаговано"), null=True, blank=True)
-    is_repeatable = models.BooleanField(_("Дозволити пройти модерацію ще раз?"), default=True)
+    last_time_updated = models.DateTimeField(
+        _("Подію редаговано"), null=True, blank=True
+    )
+    is_repeatable = models.BooleanField(
+        _("Дозволити пройти модерацію ще раз?"), default=True
+    )
 
     history = HistoricalRecords()
 
@@ -111,28 +151,37 @@ class Events(models.Model):
         """Validation before saving object"""
         super().clean()
         if self.begin_time and self.end_time and self.begin_time >= self.end_time:
-            raise ValidationError({
-                'end_time': _('Час кінця події повинен буде більшим за початок')
-            })
-        if self.result_revue == 'Відмова' and self.feedback is None:
-            raise ValidationError({
-                'feedback': _('Результат перевірки при відмові не повинен бути пустим!')
-            })
+            raise ValidationError(
+                {"end_time": _("Час кінця події повинен буде більшим за початок")}
+            )
+        if self.result_revue == "Відмова" and self.feedback is None:
+            raise ValidationError(
+                {
+                    "feedback": _(
+                        "Результат перевірки при відмові не повинен бути пустим!"
+                    )
+                }
+            )
 
     class Meta:
         indexes = [
-            models.Index(fields=['event_status', 'event_age']),
+            models.Index(fields=["event_status", "event_age"]),
         ]
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.result_revue != 'На перевірці':
-            obj, created = EventStatusEmail.objects.get_or_create(event=self, status=self.result_revue, feedback=self.feedback)
-        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if self.result_revue != "На перевірці":
+            obj, created = EventStatusEmail.objects.get_or_create(
+                event=self, status=self.result_revue, feedback=self.feedback
+            )
+        return super().save(
+            force_insert=False, force_update=False, using=None, update_fields=None
+        )
 
 
 class EventImgs(models.Model):
-    event = models.ForeignKey(to=Events, on_delete=models.CASCADE, related_name='eventimgs')
-    img = models.ImageField(upload_to='events')
-
-
-
+    event = models.ForeignKey(
+        to=Events, on_delete=models.CASCADE, related_name="eventimgs"
+    )
+    img = models.ImageField(upload_to="events")

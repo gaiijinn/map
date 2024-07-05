@@ -7,5 +7,7 @@ from .models import (OrganizationImgs, OrganizationLinks, Organizations,
 
 admin.site.register(Organizations)
 admin.site.register(OrgTypes)
-admin.site.register(OrganizationLinks,)
+admin.site.register(
+    OrganizationLinks,
+)
 admin.site.register(OrganizationImgs)

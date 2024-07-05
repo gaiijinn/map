@@ -11,23 +11,35 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('organizations', '0001_initial'),
+        ("organizations", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organizations',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='organizations', to=settings.AUTH_USER_MODEL),
+            model_name="organizations",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="organizations",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='organizationlinks',
-            name='org',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organizationlinks', to='organizations.organizations'),
+            model_name="organizationlinks",
+            name="org",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="organizationlinks",
+                to="organizations.organizations",
+            ),
         ),
         migrations.AddField(
-            model_name='organizationimgs',
-            name='org',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organizationimgs', to='organizations.organizations'),
+            model_name="organizationimgs",
+            name="org",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="organizationimgs",
+                to="organizations.organizations",
+            ),
         ),
     ]

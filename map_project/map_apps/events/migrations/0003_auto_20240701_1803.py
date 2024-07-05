@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0002_initial'),
+        ("events", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='events',
-            name='last_time_updated',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Подію редаговано'),
+            model_name="events",
+            name="last_time_updated",
+            field=models.DateTimeField(
+                blank=True, null=True, verbose_name="Подію редаговано"
+            ),
         ),
         migrations.AddField(
-            model_name='historicalevents',
-            name='last_time_updated',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Подію редаговано'),
+            model_name="historicalevents",
+            name="last_time_updated",
+            field=models.DateTimeField(
+                blank=True, null=True, verbose_name="Подію редаговано"
+            ),
         ),
     ]

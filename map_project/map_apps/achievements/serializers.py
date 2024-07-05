@@ -6,4 +6,4 @@ from .models import Achievements
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievements
-        fields = '__all__'
+        fields = "__all__"

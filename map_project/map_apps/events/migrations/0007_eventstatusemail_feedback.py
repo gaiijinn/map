@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0006_eventstatusemail'),
+        ("events", "0006_eventstatusemail"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='eventstatusemail',
-            name='feedback',
-            field=models.CharField(default='', max_length=1024, null=True),
+            model_name="eventstatusemail",
+            name="feedback",
+            field=models.CharField(default="", max_length=1024, null=True),
         ),
     ]

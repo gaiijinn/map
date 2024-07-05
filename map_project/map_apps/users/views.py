@@ -4,4 +4,4 @@ from django.shortcuts import HttpResponse, render
 
 
 def users(request):
-    return HttpResponse('200')
+    return HttpResponse("200")

@@ -13,7 +13,9 @@ class OrgTypes(models.Model):
 
 
 class Organizations(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='organizations')
+    user = models.OneToOneField(
+        to=User, on_delete=models.CASCADE, related_name="organizations"
+    )
     org_type = models.ForeignKey(to=OrgTypes, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=256, null=True, blank=True)
@@ -22,22 +24,29 @@ class Organizations(models.Model):
 
 class OrganizationImgs(models.Model):
     """For many imgs in one org profile"""
-    org = models.ForeignKey(to=Organizations, on_delete=models.CASCADE, related_name='organizationimgs')
-    photo = models.ImageField(upload_to='org/')
+
+    org = models.ForeignKey(
+        to=Organizations, on_delete=models.CASCADE, related_name="organizationimgs"
+    )
+    photo = models.ImageField(upload_to="org/")
 
 
 class OrganizationLinks(models.Model):
     """For many links in one org profile"""
 
     SOCIAL_MEDIA_CHOICES = [
-        ('facebook', 'Facebook'),
-        ('twitter', 'Twitter'),
-        ('linkedin', 'LinkedIn'),
-        ('instagram', 'Instagram'),
-        ('website', 'Website'),
-        ('other', 'Other'),
+        ("facebook", "Facebook"),
+        ("twitter", "Twitter"),
+        ("linkedin", "LinkedIn"),
+        ("instagram", "Instagram"),
+        ("website", "Website"),
+        ("other", "Other"),
     ]
 
-    org = models.ForeignKey(to=Organizations, on_delete=models.CASCADE, related_name='organizationlinks')
-    link_type = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES, default='other')
+    org = models.ForeignKey(
+        to=Organizations, on_delete=models.CASCADE, related_name="organizationlinks"
+    )
+    link_type = models.CharField(
+        max_length=20, choices=SOCIAL_MEDIA_CHOICES, default="other"
+    )
     link = models.URLField(max_length=256)
