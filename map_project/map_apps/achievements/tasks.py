@@ -25,7 +25,7 @@ def check_achievements_status(obj_id):
             )
 
             # set user level
-            # в будущем надо оставить условие потому что достижения нету смысла скидывать назад
+            # в будущем надо оставить условие потому что достижения нету смысла скидывать назад постоянно
             # if is_achieved:
             #     level_calculating.delay(obj.user.id)
 

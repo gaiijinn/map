@@ -172,6 +172,7 @@ class Events(models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         if self.result_revue != "На перевірці":
+            """To send uniq emails ststus/feedback to user email"""
             obj, created = EventStatusEmail.objects.get_or_create(
                 event=self, status=self.result_revue, feedback=self.feedback
             )
