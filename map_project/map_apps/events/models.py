@@ -30,10 +30,10 @@ class EventReports(models.Model):
     event = models.ForeignKey("Events", on_delete=models.CASCADE)
     report = models.ForeignKey(EventReportTypes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    # date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.event.name} | {self.report.name}"
+        return f"{self.event.name} | {self.user.get_full_name()} - {self.report.name}"
 
 
 class EventTypes(models.Model):

@@ -106,6 +106,7 @@ class UserSubscriptions(models.Model):
         on_delete=models.CASCADE,
         related_name='subscribed_users',
     )
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user_profile.user.get_full_name()} | {self.subscription.get_full_name()}"
