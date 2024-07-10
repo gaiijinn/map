@@ -5,22 +5,25 @@ from ..users.models import User
 from ..users.tasks import level_calculating
 from .models import Achievements, AchievementsProgressStatus
 from .tasks import check_achievements_status
+from django.db import transaction
 
 
 @receiver(post_save, sender=Achievements)
 def set_new_achievement(sender, instance, created, **kwargs):
+    """Just add new achievement for created users"""
     if created:
-        if instance.for_def_user:
-            users = User.objects.filter(is_org=False)
-        else:
-            users = User.objects.filter(is_org=True)
+        with transaction.atomic():
+            if instance.for_def_user:
+                users = User.objects.filter(is_org=False)
+            else:
+                users = User.objects.filter(is_org=True)
 
-        achievement_progress_list = [
-            AchievementsProgressStatus(user=user, achievement=instance)
-            for user in users
-        ]
+            achievement_progress_list = [
+                AchievementsProgressStatus(user=user, achievement=instance)
+                for user in users
+            ]
 
-        AchievementsProgressStatus.objects.bulk_create(achievement_progress_list)
+            AchievementsProgressStatus.objects.bulk_create(achievement_progress_list)
 
 
 @receiver(post_save, sender=AchievementsProgressStatus)

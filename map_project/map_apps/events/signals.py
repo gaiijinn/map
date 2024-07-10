@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 
 from .models import EventGuests, Events, EventStatusEmail
-from .tasks import task_reject_event_email
+from .tasks import task_event_email
 
 
 @receiver(post_save, sender=Events)
@@ -17,5 +17,6 @@ def after_saving_manipulate(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=EventStatusEmail)
 def event_status_email(sender, instance, created, **kwargs):
+    """Send only uniq emails, like different status, feedback from admin"""
     if created:
-        task_reject_event_email.delay(instance.event.id)
+        task_event_email.delay(instance.event.id)
