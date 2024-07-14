@@ -164,7 +164,6 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-
 # Redis
 
 REDIS_HOST = os.environ.get("REDIS_HOST")

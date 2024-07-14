@@ -12,9 +12,6 @@ class EventGuests(models.Model):
     event = models.ForeignKey("Events", on_delete=models.CASCADE)
     guest = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ("event", "guest")
-
     def __str__(self):
         return f"{self.event.name} | {self.guest.get_full_name()}"
 
@@ -36,11 +33,19 @@ class EventReports(models.Model):
         return f"{self.event.name} | {self.user.get_full_name()} - {self.report.name}"
 
 
-class EventTypes(models.Model):
+class EventType(models.Model):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return f"{self.name}"
+
+
+class EventTypes(models.Model):
+    event = models.ForeignKey("Events", on_delete=models.CASCADE)
+    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.event.name} | {self.event_type.name}"
 
 
 class EventStatusEmail(models.Model):
@@ -83,21 +88,21 @@ class Events(models.Model):
     creator = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
-        related_name="events",
+        related_name="created_events",
         verbose_name=_("Власник"),
     )
-    event_type = models.ForeignKey(
-        to=EventTypes,
-        on_delete=models.CASCADE,
-        related_name="events",
+
+    event_types = models.ManyToManyField(
+        EventType,
+        through=EventTypes,
         verbose_name=_("Тип події"),
     )
 
     event_guests = models.ManyToManyField(
-        User, through=EventGuests, related_name="event_guests"
+        User, through=EventGuests
     )
     event_reports = models.ManyToManyField(
-        EventReportTypes, through=EventReports, related_name="event_reports"
+        EventReportTypes, through=EventReports
     )
 
     event_status = models.CharField(
@@ -122,6 +127,8 @@ class Events(models.Model):
     name = models.CharField(_("Назва події"), max_length=256, db_index=True)
     address = models.CharField(_("Адреса проведення"), max_length=256)
     description = models.CharField(_("Опис події"), max_length=512)
+
+    main_photo = models.ImageField(upload_to='events/')
     coordinates = models.JSONField(_("Координати"))
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
