@@ -8,7 +8,9 @@ COPY map_project /service
 WORKDIR /service
 EXPOSE 8000
 
-RUN pip install -r /temp/requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r /temp/requirements.txt
+
 RUN adduser --disabled-password service-user
 
 USER service-user

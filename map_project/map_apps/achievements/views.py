@@ -12,7 +12,7 @@ from .serializers import AchievementSerializer
 
 class AchievementsModelViewSet(viewsets.ModelViewSet):
     serializer_class = AchievementSerializer
-    queryset = Achievements.objects.all()
+    queryset = Achievements.objects.all().order_by('id')
     permission_classes = (IsAuthenticated,)
 
     @method_decorator(cache_page(60 * 15))  # кеширование на 15 минут

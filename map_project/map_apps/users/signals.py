@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from .models import User, UserProfile, UserVerification, UserLevel
+from .models import User, UserLevel, UserProfile, UserVerification
 
 
 @receiver(post_save, sender=UserVerification)
