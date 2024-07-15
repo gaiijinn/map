@@ -94,22 +94,22 @@ class User(AbstractUser):
         verbose_name_plural = "Користувачі"
 
 
-class UserSubscriptions(models.Model):
-    """For free users subscription function available only for organization"""
-    user_profile = models.ForeignKey(
-        'UserProfile',
-        on_delete=models.CASCADE,
-        related_name='profile_subscriptions',
-    )
-    subscription = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='subscribed_users',
-    )
-    date = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user_profile.user.get_full_name()} | {self.subscription.get_full_name()}"
+# class UserSubscriptions(models.Model):
+#     """For free users subscription function available only for organization"""
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         related_name='profile_subscriptions',
+#     )
+#     subscription = models.ForeignKey(
+#         #Types,
+#         on_delete=models.CASCADE,
+#         related_name='subscribed_users',
+#     )
+#     date = models.DateField(auto_now_add=True)
+#
+#     def __str__(self):
+#         return f"{self.user_profile.user.get_full_name()} | {self.subscription.get_full_name()}"
 
 
 class UserProfile(models.Model):
@@ -138,7 +138,6 @@ class UserProfile(models.Model):
         _("Instagram посилання"), max_length=256, blank=True, null=True
     )
     want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
-    subscriptions = models.ManyToManyField(User, through=UserSubscriptions)
 
     history = HistoricalRecords()
 
@@ -167,6 +166,3 @@ class UserVerification(models.Model):
 
     def check_if_verif(self):
         return True if now() < self.verif_to else False
-
-
-

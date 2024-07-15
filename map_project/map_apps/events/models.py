@@ -9,7 +9,7 @@ from ..users.models import User
 
 
 class EventGuests(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE)
+    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventguests')
     guest = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -24,7 +24,7 @@ class EventReportTypes(models.Model):
 
 
 class EventReports(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE)
+    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventreports')
     report = models.ForeignKey(EventReportTypes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
@@ -41,7 +41,7 @@ class EventType(models.Model):
 
 
 class EventTypes(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE)
+    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventtypes')
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE)
 
     def __str__(self):
