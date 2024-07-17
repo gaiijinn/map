@@ -157,9 +157,13 @@ class Events(models.Model):
     def clean(self):
         """Validation before saving object"""
         super().clean()
-        if self.begin_time and self.end_time and self.begin_time >= self.end_time:
+        if self.begin_time >= self.end_time:
             raise ValidationError(
-                {"end_time": _("Час кінця події повинен буде більшим за початок")}
+                {
+                    "end_time": _(
+                         "Час кінця події повинен буде більшим за початок"
+                    )
+                }
             )
         if self.result_revue == "Відмова" and self.feedback is None:
             raise ValidationError(

@@ -84,32 +84,15 @@ class User(AbstractUser):
     objects = UserManager()
 
     def get_full_name(self):
-        return self.email
+        full_name = "%s %s" % (self.first_name, self.last_name)
+        if not full_name.strip():
+            full_name = self.email
 
-    def get_short_name(self):
-        return self.email.split("@")[0]
+        return full_name
 
     class Meta:
         verbose_name = "Користувача"
         verbose_name_plural = "Користувачі"
-
-
-# class UserSubscriptions(models.Model):
-#     """For free users subscription function available only for organization"""
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name='profile_subscriptions',
-#     )
-#     subscription = models.ForeignKey(
-#         #Types,
-#         on_delete=models.CASCADE,
-#         related_name='subscribed_users',
-#     )
-#     date = models.DateField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return f"{self.user_profile.user.get_full_name()} | {self.subscription.get_full_name()}"
 
 
 class UserProfile(models.Model):
