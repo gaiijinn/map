@@ -95,6 +95,11 @@ class User(AbstractUser):
         verbose_name_plural = "Користувачі"
 
 
+class CreatorSubscriptions(models.Model):
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creatorsubscriptions')
+    subscriber = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='creatorsubscriptions')
+
+
 class UserProfile(models.Model):
     """Models to save the user additional info"""
 
@@ -121,7 +126,7 @@ class UserProfile(models.Model):
         _("Instagram посилання"), max_length=256, blank=True, null=True
     )
     want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
-
+    subscriptions = models.ManyToManyField(User, through=CreatorSubscriptions)
     history = HistoricalRecords()
 
     def __str__(self):
@@ -149,3 +154,6 @@ class UserVerification(models.Model):
 
     def check_if_verif(self):
         return True if now() < self.verif_to else False
+
+
+
