@@ -3,7 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-from ..users.models import User
+from ..users.models import User, UserProfile
+from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator
 
 # Create your models here.
 
@@ -128,7 +129,7 @@ class Events(models.Model):
     address = models.CharField(_("Адреса проведення"), max_length=256)
     description = models.CharField(_("Опис події"), max_length=512)
 
-    main_photo = models.ImageField(upload_to='events/')
+    main_photo = models.ImageField(upload_to='events/created/')
     coordinates = models.JSONField(_("Координати"))
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
@@ -183,7 +184,7 @@ class Events(models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         if self.result_revue != "На перевірці":
-            """To send uniq emails ststus/feedback to user email"""
+            """To send uniq emails status/feedback to user email"""
             obj, created = EventStatusEmail.objects.get_or_create(
                 event=self, status=self.result_revue, feedback=self.feedback
             )
@@ -197,3 +198,13 @@ class EventImgs(models.Model):
         to=Events, on_delete=models.CASCADE, related_name="eventimgs"
     )
     img = models.ImageField(upload_to="events")
+
+
+class UsersFeedback(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='usersfeedback')
+    event = models.ForeignKey(Events, on_delete=models.CASCADE, related_name='usersfeedback')
+    feedback = models.CharField(max_length=1024, validators=[MinLengthValidator(64)])
+    main_photo = models.ImageField(upload_to='events/reports/', blank=True, null=True)
+    additional_photo = models.ImageField(upload_to='events/reports/', blank=True, null=True )
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    #datetime = models.DateTimeField(auto_now_add=True)

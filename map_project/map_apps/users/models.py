@@ -96,6 +96,7 @@ class User(AbstractUser):
 
 
 class CreatorSubscriptions(models.Model):
+    """Default user can subscribe on creators(for free only on organizations)"""
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creatorsubscriptions')
     subscriber = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='creatorsubscriptions')
 
@@ -154,6 +155,4 @@ class UserVerification(models.Model):
 
     def check_if_verif(self):
         return True if now() < self.verif_to else False
-
-
 

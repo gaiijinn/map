@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
 
 from .models import (EventGuests, EventImgs, EventReports, EventReportTypes,
-                     Events, EventStatusEmail, EventTypes, EventType)
+                     Events, EventStatusEmail, EventTypes, EventType, UsersFeedback)
 
 # Register your models here.
 
@@ -15,6 +15,8 @@ admin.site.register(EventImgs)
 admin.site.register(EventReportTypes)
 admin.site.register(EventReports)
 admin.site.register(EventStatusEmail)
+
+admin.site.register(UsersFeedback)
 
 
 # class EventsHistoryAdmin(SimpleHistoryAdmin):
