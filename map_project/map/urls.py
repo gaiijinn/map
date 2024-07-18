@@ -22,16 +22,24 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+import djoser
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # apps
     path("users/", include("map_apps.users.urls")),
     path("achievements/", include("map_apps.achievements.urls")),
-    # path('organization/', include('map_apps.organizations.urls')),
+    path('organization/', include('map_apps.organizations.urls')),
 
+    # register
+    path('api/djoser/', include('djoser.urls')),
+
+    # authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # api docs
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
 ]

@@ -1,0 +1,1 @@
+[{"model": "events.eventtype", "pk": 1, "fields": {"name": "Виставка"}}, {"model": "events.eventtype", "pk": 2, "fields": {"name": "Читання книг"}}, {"model": "events.eventtype", "pk": 3, "fields": {"name": "Чілл"}}, {"model": "events.eventtype", "pk": 4, "fields": {"name": "Аукціон"}}, {"model": "events.eventtype", "pk": 5, "fields": {"name": "Настольні ігри"}}]

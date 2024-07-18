@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "simple_history",
     "rest_framework_simplejwt",
     "drf_spectacular",
+    "djoser",
 
     "map_apps.users.apps.UsersConfig",
     "map_apps.achievements.apps.AchievementsConfig",
@@ -134,7 +135,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -233,4 +233,11 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-# Swagger
+# Djoser
+
+DJOSER = {
+    #'USER_CREATE_PASSWORD_RETYPE': True,
+    "SERIALIZERS": {
+        'user_create': 'map_apps.users.serializers.CustomCreateUserSerializer',
+    },
+}

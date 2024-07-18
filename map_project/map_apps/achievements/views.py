@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import AchievementsProgressStatus
@@ -11,7 +11,7 @@ from django.db.models import Count
 # Create your views here.
 
 
-class AchievementsModelViewSet(viewsets.ModelViewSet):
+class AchievementsStatusApiView(generics.ListAPIView):
     serializer_class = AchievementProgressStatusSerializer
     queryset = AchievementsProgressStatus.objects.all().order_by('-id')
     permission_classes = (IsAuthenticated,)
@@ -23,7 +23,12 @@ class AchievementsModelViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        response_data = {'result': response.data, 'total_amount': self.get_queryset().aggregate(total=Count('id'))}
-        response.data = response_data
+        total = self.get_queryset().aggregate(total=Count('id'))
+        achieved = self.get_queryset().aggregate(achieved=Count('is_achieved'))
 
+        response_data = {'result': response.data,
+                         'achieved': achieved,
+                         'all': total}
+
+        response.data = response_data
         return response

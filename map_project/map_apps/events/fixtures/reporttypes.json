@@ -1,0 +1,1 @@
+[{"model": "events.eventreporttypes", "pk": 1, "fields": {"name": "Не відподіває віковому обмеженюю"}}, {"model": "events.eventreporttypes", "pk": 3, "fields": {"name": "Цензура"}}]
