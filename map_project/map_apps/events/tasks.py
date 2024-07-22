@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.utils import timezone
 
 from .models import Events
 from .services import send_approved_event_email, send_reject_event_email
@@ -12,3 +13,14 @@ def task_event_email(event_id: int):
             send_reject_event_email(event)
         elif event.result_revue == "Підтверджено":
             send_approved_event_email(event)
+
+
+@shared_task()
+def check_status_events():
+    localtime = timezone.localtime(timezone.now())
+    current_time = localtime.time()
+
+    events = Events.objects.filter(event_status='not_started', begin_time__gt=current_time)
+    for event in events:
+        event.event_status = 'in_process'
+        event.save()

@@ -24,7 +24,7 @@ class AchievementsStatusApiView(generics.ListAPIView):
         response = super().list(request, *args, **kwargs)
 
         total = self.get_queryset().aggregate(total=Count('id'))
-        achieved = self.get_queryset().aggregate(achieved=Count('is_achieved'))
+        achieved = self.get_queryset().filter(is_achieved=True).aggregate(achieved=Count('is_achieved'))
 
         response_data = {'result': response.data,
                          'achieved': achieved,

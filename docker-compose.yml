@@ -53,3 +53,25 @@ services:
       - redis
       - database
 
+  beat:
+    build:
+      context: .
+    hostname: beat
+    entrypoint: celery
+    command: -A map beat -l info
+    environment:
+      - DB_HOST=database
+      - DB_USER=admin
+      - DB_NAME=city_map
+      - DB_PASSWORD=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./map_project:/service
+    links:
+      - database
+      - redis
+    depends_on:
+      - redis
+      - database
+
