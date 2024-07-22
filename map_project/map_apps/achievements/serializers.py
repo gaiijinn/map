@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import AchievementsProgressStatus, Achievements
+from .models import Achievements, AchievementsProgressStatus
 
 
 class AchievementSerializer(serializers.ModelSerializer):

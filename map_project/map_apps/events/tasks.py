@@ -19,8 +19,12 @@ def task_event_email(event_id: int):
 def check_status_events():
     localtime = timezone.localtime(timezone.now())
     current_time = localtime.time()
+    current_day = localtime.date()
 
-    events = Events.objects.filter(event_status='not_started', begin_time__gt=current_time)
-    for event in events:
-        event.event_status = 'in_process'
-        event.save()
+    events = Events.objects.filter(result_revue='Підтверджено', event_status='not_started',
+                                   begin_time__lte=current_time, begin_day=current_day)
+
+    if events:
+        for event in events:
+            event.event_status = 'in_process'
+            event.save()

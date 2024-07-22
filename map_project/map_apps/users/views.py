@@ -1,10 +1,10 @@
 from django.shortcuts import HttpResponse, render
-from rest_framework import generics
-from .serializers import UserProfileSerializer
-from .models import UserProfile
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import generics, status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework import status
+
+from .models import UserProfile
+from .serializers import UserProfileSerializer
 
 # Create your views here.
 

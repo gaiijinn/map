@@ -14,15 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import djoser
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
-
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-import djoser
 
 urlpatterns = [
     path("admin/", admin.site.urls),
