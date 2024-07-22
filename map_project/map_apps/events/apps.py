@@ -6,4 +6,4 @@ class EventsConfig(AppConfig):
     name = "map_apps.events"
 
     def ready(self):
-        pass
+        from ..events import signals
