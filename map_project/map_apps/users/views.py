@@ -6,17 +6,17 @@ from rest_framework.response import Response
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 
+from django.views.generic import TemplateView
 # Create your views here.
-
-
-def users(request):
-    return HttpResponse("200")
 
 
 class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all().select_related('user', 'user_level')
-    parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
         return self.queryset.get(user=self.request.user)
+
+
+class UserProfileView(TemplateView):
+    template_name = "user-profile.html"

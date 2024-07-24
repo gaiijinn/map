@@ -78,6 +78,12 @@ class User(AbstractUser):
     is_verif = models.BooleanField(_("Верифікований"), default=False)
     rating = models.PositiveSmallIntegerField(_("Рейтинг"), default=0, blank=True)
 
+    profile_picture = models.ImageField(
+        _("Фото користувача"),
+        upload_to="users/profile_picture/",
+        blank=True,
+    )
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -109,11 +115,6 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="user_profile",
         verbose_name=_("Користувач"),
-    )
-    profile_picture = models.ImageField(
-        _("Фото користувача"),
-        upload_to="users/profile_picture/",
-        blank=True,
     )
     user_level = models.ForeignKey(
         to=UserLevel,

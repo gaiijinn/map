@@ -82,9 +82,9 @@ class Events(models.Model):
     )
 
     STATUS_REVUE = (
-        ("Підтверджено", "Підтверджено"),
-        ("Відмова", "Відмова"),
-        ("На перевірці", "На перевірці"),
+        ("approved", "Підтверджено"),
+        ("rejected", "Відмова"),
+        ("in_revue", "На перевірці"),
     )
 
     creator = models.ForeignKey(
@@ -139,7 +139,7 @@ class Events(models.Model):
     result_revue = models.CharField(
         _("Статус перевірки"),
         choices=STATUS_REVUE,
-        default="На перевірці",
+        default="in_revue",
         max_length=64,
         db_index=True,
     )
@@ -167,7 +167,7 @@ class Events(models.Model):
                     )
                 }
             )
-        if self.result_revue == "Відмова" and self.feedback is None:
+        if self.result_revue == "rejected" and self.feedback is None:
             raise ValidationError(
                 {
                     "feedback": _(
@@ -184,7 +184,7 @@ class Events(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        if self.result_revue != "На перевірці":
+        if self.result_revue != "in_revue":
             """To send uniq emails status/feedback to user email"""
             obj, created = EventStatusEmail.objects.get_or_create(
                 event=self, status=self.result_revue, feedback=self.feedback

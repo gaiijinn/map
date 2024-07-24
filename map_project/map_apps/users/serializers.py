@@ -42,16 +42,16 @@ class BaseUserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'is_verif', 'rating')
+        fields = ('first_name', 'last_name', 'email', 'is_verif', 'rating', 'profile_picture')
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = BaseUserProfileSerializer()
-    user_level = UserLevelSerializer()
+    user_level = UserLevelSerializer(read_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ('profile_picture', 'user_level', 'about_me', 'inst_link', 'want_newsletters', 'user')
+        fields = ('user_level', 'about_me', 'inst_link', 'want_newsletters', 'user')
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)

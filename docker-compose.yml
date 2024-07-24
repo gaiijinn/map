@@ -74,4 +74,3 @@ services:
     depends_on:
       - redis
       - database
-

@@ -24,12 +24,13 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
 
     # apps
-    path("users/", include("map_apps.users.urls")),
-    path("achievements/", include("map_apps.achievements.urls")),
+    path('users/', include('map_apps.users.urls')),
+    path('achievements/', include('map_apps.achievements.urls')),
     path('organization/', include('map_apps.organizations.urls')),
+    path('events/', include('map_apps.events.urls')),
 
     # register
     path('api/djoser/', include('djoser.urls')),

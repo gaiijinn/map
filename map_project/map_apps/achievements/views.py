@@ -18,7 +18,6 @@ class AchievementsStatusApiView(generics.ListAPIView):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user).select_related('achievement')
 
-    # @method_decorator(cache_page(60 * 15))  # кеширование на 15 минут
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
