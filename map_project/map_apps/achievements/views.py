@@ -14,6 +14,7 @@ class AchievementsStatusApiView(generics.ListAPIView):
     serializer_class = AchievementProgressStatusSerializer
     queryset = AchievementsProgressStatus.objects.all().order_by('-id')
     permission_classes = (IsAuthenticated,)
+    filterset_fields = ('is_achieved', )
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user).select_related('achievement')

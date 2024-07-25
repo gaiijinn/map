@@ -181,17 +181,16 @@ class Events(models.Model):
             models.Index(fields=["event_status", "event_age"]),
         ]
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        instance = super().save(
+            force_insert=False, force_update=False, using=None, update_fields=None
+        )
         if self.result_revue != "in_revue":
             """To send uniq emails status/feedback to user email"""
             obj, created = EventStatusEmail.objects.get_or_create(
                 event=self, status=self.result_revue, feedback=self.feedback
             )
-        return super().save(
-            force_insert=False, force_update=False, using=None, update_fields=None
-        )
+        return instance
 
 
 class EventImgs(models.Model):

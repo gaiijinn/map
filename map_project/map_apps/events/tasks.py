@@ -17,14 +17,19 @@ def task_event_email(event_id: int):
 
 @shared_task()
 def check_status_events():
+    """Task to set actual status event by current local time and event begin_time/end_time"""
     localtime = timezone.localtime(timezone.now())
     current_time = localtime.time()
     current_day = localtime.date()
 
-    events = Events.objects.filter(result_revue='approved', event_status='not_started', begin_day=current_day,
-                                   begin_time__lte=current_time)
+    events = Events.objects.filter(result_revue='approved', begin_day=current_day,
+                                   begin_time__lte=current_time).exclude(event_status='ended')
 
     if events:
         for event in events:
-            event.event_status = 'in_process'
+            if event.end_time <= current_time:
+                event.event_status = 'ended'
+            else:
+                event.event_status = 'in_process'
+
             event.save()

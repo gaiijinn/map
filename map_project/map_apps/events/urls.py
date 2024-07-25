@@ -1,9 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 
-from .views import EventListApiView
+from .views import EventReadOnlyModelViewSet
+from rest_framework.routers import DefaultRouter
 
 app_name = 'events'
 
+router = DefaultRouter()
+router.register('api/events', EventReadOnlyModelViewSet)
+
 urlpatterns = [
-    path('api/event-list/', EventListApiView.as_view(), name='event-list'),
+    path('', include(router.urls)),
 ]
