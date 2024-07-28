@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Events, EventType, EventTypes, EventImgs, EventGuests
-from ..users.models import User
+
+from ..users.models import User, UserProfile
+from .models import EventGuests, EventImgs, Events, EventType, EventTypes
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -32,6 +33,7 @@ class EventGuestsSerializer(serializers.ModelSerializer):
 
 
 class EventCreatorSerializer(serializers.ModelSerializer):
+    """Нужно будет адаптировать сериализатор в будушем для организации"""
     name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -39,9 +41,10 @@ class EventCreatorSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'profile_picture')
 
     def get_name(self, obj):
-        if obj.user_profile:
-            return obj.get_full_name()
-        else:
+        try:
+            if obj.user_profile:
+                return obj.get_full_name()
+        except UserProfile.DoesNotExist:
             return obj.organizations.name
 
 

@@ -1,4 +1,5 @@
 from django.shortcuts import HttpResponse, render
+from django.views.generic import TemplateView
 from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
@@ -6,7 +7,6 @@ from rest_framework.response import Response
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 
-from django.views.generic import TemplateView
 # Create your views here.
 
 
