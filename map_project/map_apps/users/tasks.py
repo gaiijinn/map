@@ -7,7 +7,7 @@ def level_calculating(user_id: int):
     from ..achievements.models import AchievementsProgressStatus
     from .models import User, UserLevel, UserProfile
 
-    user = User.objects.select_related("userprofile").filter(id=user_id).first()
+    user = User.objects.select_related("user_profile").filter(id=user_id).first()
 
     if user:
         total_exp = (
