@@ -4,6 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Events
 from .serializers import EventListSerializer, EventRetrieveSerializer
@@ -11,8 +12,12 @@ from .serializers import EventListSerializer, EventRetrieveSerializer
 # Create your views here.
 
 
+class EventsPagination(PageNumberPagination):
+    page_size = 50
+
+
 class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
-    pagination_class = None
+    pagination_class = (EventsPagination, )
     queryset = Events.objects.all()
     filterset_fields = (
         "event_types",
@@ -26,22 +31,23 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == "list":
             return (
                 (
-                    Events.objects.all()
+                    Events.objects.all().
+                    filter(result_revue="approved")
+                    .exclude(event_status="ended")
                     .select_related(
                         "creator", "creator__user_profile", "creator__organizations"
                     )
                     .prefetch_related("eventtypes__event_type")
                 )
-                .exclude(event_status="ended")
-                .filter(result_revue="approved")
             )
         return (
             Events.objects.all()
+            .filter(result_revue="approved")
             .select_related(
                 "creator", "creator__user_profile", "creator__organizations"
             )
             .prefetch_related("eventtypes__event_type", "eventguests__guest")
-        ).filter(result_revue="approved")
+        )
 
     def get_serializer_class(self):
         if self.action == "retrieve":
