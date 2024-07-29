@@ -19,8 +19,8 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'check_event_status_every_min': {
-        'task': 'map_apps.events.tasks.check_status_events',
-        'schedule': crontab(minute='*/1'),
+    "check_event_status_every_min": {
+        "task": "map_apps.events.tasks.check_status_events",
+        "schedule": crontab(minute="*/1"),
     },
 }

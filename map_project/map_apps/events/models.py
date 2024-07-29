@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.core.validators import (MaxValueValidator, MinLengthValidator,
-                                    MinValueValidator)
+from django.core.validators import (
+    MaxValueValidator,
+    MinLengthValidator,
+    MinValueValidator,
+)
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
@@ -11,7 +14,9 @@ from ..users.models import User, UserProfile
 
 
 class EventGuests(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventguests')
+    event = models.ForeignKey(
+        "Events", on_delete=models.CASCADE, related_name="eventguests"
+    )
     guest = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -26,7 +31,9 @@ class EventReportTypes(models.Model):
 
 
 class EventReports(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventreports')
+    event = models.ForeignKey(
+        "Events", on_delete=models.CASCADE, related_name="eventreports"
+    )
     report = models.ForeignKey(EventReportTypes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
@@ -43,7 +50,9 @@ class EventType(models.Model):
 
 
 class EventTypes(models.Model):
-    event = models.ForeignKey("Events", on_delete=models.CASCADE, related_name='eventtypes')
+    event = models.ForeignKey(
+        "Events", on_delete=models.CASCADE, related_name="eventtypes"
+    )
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -100,12 +109,8 @@ class Events(models.Model):
         verbose_name=_("Тип події"),
     )
 
-    event_guests = models.ManyToManyField(
-        User, through=EventGuests
-    )
-    event_reports = models.ManyToManyField(
-        EventReportTypes, through=EventReports
-    )
+    event_guests = models.ManyToManyField(User, through=EventGuests)
+    event_reports = models.ManyToManyField(EventReportTypes, through=EventReports)
 
     event_status = models.CharField(
         _("Статус події"),
@@ -130,7 +135,7 @@ class Events(models.Model):
     address = models.CharField(_("Адреса проведення"), max_length=256)
     description = models.CharField(_("Опис події"), max_length=512)
 
-    main_photo = models.ImageField(upload_to='events/created/')
+    main_photo = models.ImageField(upload_to="events/created/")
     coordinates = models.JSONField(_("Координати"))
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
@@ -161,11 +166,7 @@ class Events(models.Model):
         super().clean()
         if self.begin_time >= self.end_time:
             raise ValidationError(
-                {
-                    "end_time": _(
-                         "Час кінця події повинен буде більшим за початок"
-                    )
-                }
+                {"end_time": _("Час кінця події повинен буде більшим за початок")}
             )
         if self.result_revue == "rejected" and self.feedback is None:
             raise ValidationError(
@@ -181,7 +182,9 @@ class Events(models.Model):
             models.Index(fields=["event_status", "event_age"]),
         ]
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         instance = super().save(
             force_insert=False, force_update=False, using=None, update_fields=None
         )
@@ -201,10 +204,18 @@ class EventImgs(models.Model):
 
 
 class UsersFeedback(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='usersfeedback')
-    event = models.ForeignKey(Events, on_delete=models.CASCADE, related_name='usersfeedback')
+    user = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name="usersfeedback"
+    )
+    event = models.ForeignKey(
+        Events, on_delete=models.CASCADE, related_name="usersfeedback"
+    )
     feedback = models.CharField(max_length=1024, validators=[MinLengthValidator(64)])
-    main_photo = models.ImageField(upload_to='events/reports/', blank=True, null=True)
-    additional_photo = models.ImageField(upload_to='events/reports/', blank=True, null=True )
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
-    #datetime = models.DateTimeField(auto_now_add=True)
+    main_photo = models.ImageField(upload_to="events/reports/", blank=True, null=True)
+    additional_photo = models.ImageField(
+        upload_to="events/reports/", blank=True, null=True
+    )
+    rating = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
+    )
+    # datetime = models.DateTimeField(auto_now_add=True)

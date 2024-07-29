@@ -1,8 +1,7 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 
-from .models import (CreatorSubscriptions, User, UserLevel, UserProfile,
-                     UserVerification)
+from .models import CreatorSubscriptions, User, UserLevel, UserProfile, UserVerification
 
 admin.site.register(User)
 admin.site.register(UserLevel)

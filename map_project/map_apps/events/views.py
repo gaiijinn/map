@@ -14,17 +14,37 @@ from .serializers import EventListSerializer, EventRetrieveSerializer
 class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
     queryset = Events.objects.all()
-    filterset_fields = ('event_types', 'event_status', 'event_age', 'begin_day', 'created_by_org')
+    filterset_fields = (
+        "event_types",
+        "event_status",
+        "event_age",
+        "begin_day",
+        "created_by_org",
+    )
 
     def get_queryset(self):
-        if self.action == 'list':
-            return (Events.objects.all().select_related('creator', 'creator__user_profile', 'creator__organizations').
-                    prefetch_related('eventtypes__event_type')).exclude(event_status='ended').filter(result_revue='approved')
-        return (Events.objects.all().select_related('creator', 'creator__user_profile', 'creator__organizations').
-                prefetch_related('eventtypes__event_type', 'eventguests__guest')).filter(result_revue='approved')
+        if self.action == "list":
+            return (
+                (
+                    Events.objects.all()
+                    .select_related(
+                        "creator", "creator__user_profile", "creator__organizations"
+                    )
+                    .prefetch_related("eventtypes__event_type")
+                )
+                .exclude(event_status="ended")
+                .filter(result_revue="approved")
+            )
+        return (
+            Events.objects.all()
+            .select_related(
+                "creator", "creator__user_profile", "creator__organizations"
+            )
+            .prefetch_related("eventtypes__event_type", "eventguests__guest")
+        ).filter(result_revue="approved")
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if self.action == "retrieve":
             return EventRetrieveSerializer
         return EventListSerializer
 
@@ -34,13 +54,16 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
         instance = self.get_object()
 
         if instance.event_status == "ended":
-            return Response({"detail": "Event has ended and is no longer available."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Event has ended and is no longer available."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         serializer = self.get_serializer(instance)
         response_data = serializer.data
 
         total_guests = instance.eventguests.count()
-        response_data['total_guests'] = total_guests
+        response_data["total_guests"] = total_guests
 
         return Response(response_data)
 

@@ -22,14 +22,15 @@ def check_status_events():
     current_time = localtime.time()
     current_day = localtime.date()
 
-    events = Events.objects.filter(result_revue='approved', begin_day=current_day,
-                                   begin_time__lte=current_time).exclude(event_status='ended')
+    events = Events.objects.filter(
+        result_revue="approved", begin_day=current_day, begin_time__lte=current_time
+    ).exclude(event_status="ended")
 
     if events:
         for event in events:
             if event.end_time <= current_time:
-                event.event_status = 'ended'
+                event.event_status = "ended"
             else:
-                event.event_status = 'in_process'
+                event.event_status = "in_process"
 
             event.save()

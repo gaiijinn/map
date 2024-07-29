@@ -103,8 +103,13 @@ class User(AbstractUser):
 
 class CreatorSubscriptions(models.Model):
     """Default user can subscribe on creators(for free only on organizations)"""
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creatorsubscriptions')
-    subscriber = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='creatorsubscriptions')
+
+    creator = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="creatorsubscriptions"
+    )
+    subscriber = models.ForeignKey(
+        "UserProfile", on_delete=models.CASCADE, related_name="creatorsubscriptions"
+    )
 
 
 class UserProfile(models.Model):
@@ -139,16 +144,23 @@ class UserVerification(models.Model):
     """Base email verif model with uuid4"""
 
     user = models.ForeignKey(
-        to=User, on_delete=models.CASCADE, verbose_name=_("Користувач"), related_name='userverification'
+        to=User,
+        on_delete=models.CASCADE,
+        verbose_name=_("Користувач"),
+        related_name="userverification",
     )
     code = models.UUIDField(_("Код"), default=uuid.uuid4)
     created_at = models.DateTimeField(_("Створено"), auto_now_add=True)
     expired_at = models.DateTimeField(
-        _("Дійсний до"), blank=True, null=True,
+        _("Дійсний до"),
+        blank=True,
+        null=True,
     )
     # верификация условно будет на год выдаватся
     verif_to = models.DateTimeField(
-        _("Активовано до"), blank=True, null=True,
+        _("Активовано до"),
+        blank=True,
+        null=True,
     )
 
     def check_if_expired(self):
@@ -156,4 +168,3 @@ class UserVerification(models.Model):
 
     def check_if_verif(self):
         return True if now() < self.verif_to else False
-

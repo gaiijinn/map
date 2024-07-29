@@ -8,21 +8,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0002_auto_20240715_2340'),
+        ("users", "0002_auto_20240715_2340"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CreatorSubscriptions',
+            name="CreatorSubscriptions",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('subscriber', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.userprofile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "subscriber",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.userprofile",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='subscriptions',
-            field=models.ManyToManyField(through='users.CreatorSubscriptions', to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="subscriptions",
+            field=models.ManyToManyField(
+                through="users.CreatorSubscriptions", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

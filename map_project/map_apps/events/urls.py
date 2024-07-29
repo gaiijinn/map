@@ -3,11 +3,11 @@ from rest_framework.routers import DefaultRouter
 
 from .views import EventReadOnlyModelViewSet
 
-app_name = 'events'
+app_name = "events"
 
 router = DefaultRouter()
-router.register('api/events', EventReadOnlyModelViewSet)
+router.register("api/events", EventReadOnlyModelViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

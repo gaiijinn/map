@@ -6,5 +6,9 @@ from .views import AchievementsStatusApiView
 app_name = "achievements"
 
 urlpatterns = [
-    path('api/user-achievement-status/', AchievementsStatusApiView.as_view(), name='achievement-status'),
+    path(
+        "api/user-achievement-status/",
+        AchievementsStatusApiView.as_view(),
+        name="achievement-status",
+    ),
 ]

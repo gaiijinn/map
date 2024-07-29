@@ -33,7 +33,7 @@ class CustomCreateUserSerializer(UserCreateSerializer):
 class UserLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserLevel
-        fields = ('level_name', 'low_range', 'top_range')
+        fields = ("level_name", "low_range", "top_range")
 
 
 class BaseUserProfileSerializer(serializers.ModelSerializer):
@@ -42,7 +42,14 @@ class BaseUserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'is_verif', 'rating', 'profile_picture')
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+            "is_verif",
+            "rating",
+            "profile_picture",
+        )
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -51,13 +58,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user_level', 'about_me', 'inst_link', 'want_newsletters', 'user')
+        fields = ("user_level", "about_me", "inst_link", "want_newsletters", "user")
 
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
+        user_data = validated_data.pop("user", None)
 
         if user_data:
-            user_serializer = BaseUserProfileSerializer(instance.user, data=user_data, partial=True)
+            user_serializer = BaseUserProfileSerializer(
+                instance.user, data=user_data, partial=True
+            )
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
 

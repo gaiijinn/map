@@ -8,18 +8,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0003_auto_20240717_1917'),
+        ("users", "0003_auto_20240717_1917"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='creatorsubscriptions',
-            name='creator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='creatorsubscriptions', to=settings.AUTH_USER_MODEL),
+            model_name="creatorsubscriptions",
+            name="creator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="creatorsubscriptions",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='creatorsubscriptions',
-            name='subscriber',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='creatorsubscriptions', to='users.userprofile'),
+            model_name="creatorsubscriptions",
+            name="subscriber",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="creatorsubscriptions",
+                to="users.userprofile",
+            ),
         ),
     ]

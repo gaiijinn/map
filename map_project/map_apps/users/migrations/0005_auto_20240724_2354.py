@@ -6,21 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_auto_20240717_1917'),
+        ("users", "0004_auto_20240717_1917"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='historicaluserprofile',
-            name='profile_picture',
+            model_name="historicaluserprofile",
+            name="profile_picture",
         ),
         migrations.RemoveField(
-            model_name='userprofile',
-            name='profile_picture',
+            model_name="userprofile",
+            name="profile_picture",
         ),
         migrations.AddField(
-            model_name='user',
-            name='profile_picture',
-            field=models.ImageField(blank=True, upload_to='users/profile_picture/', verbose_name='Фото користувача'),
+            model_name="user",
+            name="profile_picture",
+            field=models.ImageField(
+                blank=True,
+                upload_to="users/profile_picture/",
+                verbose_name="Фото користувача",
+            ),
         ),
     ]

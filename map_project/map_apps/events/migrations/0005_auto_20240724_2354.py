@@ -6,18 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0004_auto_20240717_1941'),
+        ("events", "0004_auto_20240717_1941"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='events',
-            name='result_revue',
-            field=models.CharField(choices=[('approved', 'Підтверджено'), ('rejected', 'Відмова'), ('in_revue', 'На перевірці')], db_index=True, default='in_revue', max_length=64, verbose_name='Статус перевірки'),
+            model_name="events",
+            name="result_revue",
+            field=models.CharField(
+                choices=[
+                    ("approved", "Підтверджено"),
+                    ("rejected", "Відмова"),
+                    ("in_revue", "На перевірці"),
+                ],
+                db_index=True,
+                default="in_revue",
+                max_length=64,
+                verbose_name="Статус перевірки",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalevents',
-            name='result_revue',
-            field=models.CharField(choices=[('approved', 'Підтверджено'), ('rejected', 'Відмова'), ('in_revue', 'На перевірці')], db_index=True, default='in_revue', max_length=64, verbose_name='Статус перевірки'),
+            model_name="historicalevents",
+            name="result_revue",
+            field=models.CharField(
+                choices=[
+                    ("approved", "Підтверджено"),
+                    ("rejected", "Відмова"),
+                    ("in_revue", "На перевірці"),
+                ],
+                db_index=True,
+                default="in_revue",
+                max_length=64,
+                verbose_name="Статус перевірки",
+            ),
         ),
     ]

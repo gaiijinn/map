@@ -7,7 +7,7 @@ from .models import EventGuests, EventImgs, Events, EventType, EventTypes
 class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventType
-        fields = ('name', )
+        fields = ("name",)
 
 
 class EventTypesSerializer(serializers.ModelSerializer):
@@ -15,13 +15,13 @@ class EventTypesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventTypes
-        fields = ('event_type', )
+        fields = ("event_type",)
 
 
 class GuestSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'profile_picture')
+        fields = ("id", "email", "profile_picture")
 
 
 class EventGuestsSerializer(serializers.ModelSerializer):
@@ -29,16 +29,17 @@ class EventGuestsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventGuests
-        fields = ('guest', )
+        fields = ("guest",)
 
 
 class EventCreatorSerializer(serializers.ModelSerializer):
     """Нужно будет адаптировать сериализатор в будушем для организации"""
+
     name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'profile_picture')
+        fields = ("id", "name", "profile_picture")
 
     def get_name(self, obj):
         try:
@@ -49,7 +50,7 @@ class EventCreatorSerializer(serializers.ModelSerializer):
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    event_types = EventTypesSerializer(many=True, source='eventtypes', read_only=True)
+    event_types = EventTypesSerializer(many=True, source="eventtypes", read_only=True)
     creator = EventCreatorSerializer(read_only=True)
     event_status = serializers.SerializerMethodField(read_only=True)
     rating = serializers.SerializerMethodField(read_only=True)
@@ -57,9 +58,22 @@ class EventListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Events
         fields = (
-            'id', 'creator', 'event_types', 'event_status', 'event_age',
-            'begin_day', 'begin_time', 'end_time', 'name', 'address', 'description',
-            'main_photo', 'coordinates', 'price', 'created_by_org', 'rating'
+            "id",
+            "creator",
+            "event_types",
+            "event_status",
+            "event_age",
+            "begin_day",
+            "begin_time",
+            "end_time",
+            "name",
+            "address",
+            "description",
+            "main_photo",
+            "coordinates",
+            "price",
+            "created_by_org",
+            "rating",
         )
 
     def get_event_status(self, obj):
@@ -72,12 +86,14 @@ class EventListSerializer(serializers.ModelSerializer):
 class EventImgSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventImgs
-        fields = ('img', )
+        fields = ("img",)
 
 
 class EventRetrieveSerializer(serializers.ModelSerializer):
-    event_types = EventTypesSerializer(many=True, source='eventtypes', read_only=True)
-    event_guests = EventGuestsSerializer(many=True, read_only=True, source='eventguests')
+    event_types = EventTypesSerializer(many=True, source="eventtypes", read_only=True)
+    event_guests = EventGuestsSerializer(
+        many=True, read_only=True, source="eventguests"
+    )
     eventimgs = EventImgSerializer(many=True, read_only=True)
     creator = EventCreatorSerializer(read_only=True)
     event_status = serializers.SerializerMethodField(read_only=True)
@@ -86,9 +102,23 @@ class EventRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Events
         fields = (
-            'creator',  'event_status', 'event_age', 'rating', 'begin_day', 'begin_time', 'end_time',
-            'name', 'address', 'description', 'main_photo', 'coordinates', 'price', 'created_by_org',
-            'eventimgs', 'event_guests', 'event_types',
+            "creator",
+            "event_status",
+            "event_age",
+            "rating",
+            "begin_day",
+            "begin_time",
+            "end_time",
+            "name",
+            "address",
+            "description",
+            "main_photo",
+            "coordinates",
+            "price",
+            "created_by_org",
+            "eventimgs",
+            "event_guests",
+            "event_types",
         )
 
     def get_event_status(self, obj):

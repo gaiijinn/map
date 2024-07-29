@@ -11,13 +11,17 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('achievements', '0001_initial'),
+        ("achievements", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='achievementsprogressstatus',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='achievementsprogressstatus', to=settings.AUTH_USER_MODEL),
+            model_name="achievementsprogressstatus",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="achievementsprogressstatus",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

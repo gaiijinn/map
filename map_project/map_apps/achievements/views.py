@@ -12,22 +12,26 @@ from .serializers import AchievementProgressStatusSerializer
 
 class AchievementsStatusApiView(generics.ListAPIView):
     serializer_class = AchievementProgressStatusSerializer
-    queryset = AchievementsProgressStatus.objects.all().order_by('-id')
+    queryset = AchievementsProgressStatus.objects.all().order_by("-id")
     permission_classes = (IsAuthenticated,)
-    filterset_fields = ('is_achieved', )
+    filterset_fields = ("is_achieved",)
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).select_related('achievement')
+        return self.queryset.filter(user=self.request.user).select_related(
+            "achievement"
+        )
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        total = self.get_queryset().aggregate(total=Count('id'))
-        achieved = self.get_queryset().filter(is_achieved=True).aggregate(achieved=Count('is_achieved'))
+        total = self.get_queryset().aggregate(total=Count("id"))
+        achieved = (
+            self.get_queryset()
+            .filter(is_achieved=True)
+            .aggregate(achieved=Count("is_achieved"))
+        )
 
-        response_data = {'result': response.data,
-                         'achieved': achieved,
-                         'all': total}
+        response_data = {"result": response.data, "achieved": achieved, "all": total}
 
         response.data = response_data
         return response

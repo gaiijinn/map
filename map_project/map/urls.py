@@ -20,28 +20,28 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-
+    path("admin/", admin.site.urls),
     # apps
-    path('users/', include('map_apps.users.urls')),
-    path('achievements/', include('map_apps.achievements.urls')),
-    path('organization/', include('map_apps.organizations.urls')),
-    path('events/', include('map_apps.events.urls')),
-
+    path("", include("map_apps.main.urls")),
+    path("users/", include("map_apps.users.urls")),
+    path("achievements/", include("map_apps.achievements.urls")),
+    path("organization/", include("map_apps.organizations.urls")),
+    path("events/", include("map_apps.events.urls")),
     # register
-    path('api/djoser/', include('djoser.urls')),
-
+    path("api/djoser/", include("djoser.urls")),
     # authentication
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # api docs
-    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
+    path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="api-schema"),
+        name="api-docs",
+    ),
 ]
 
 if settings.DEBUG:

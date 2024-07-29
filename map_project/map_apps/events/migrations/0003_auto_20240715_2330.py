@@ -7,23 +7,35 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0002_initial'),
+        ("events", "0002_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='eventguests',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='eventguests', to='events.events'),
+            model_name="eventguests",
+            name="event",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="eventguests",
+                to="events.events",
+            ),
         ),
         migrations.AlterField(
-            model_name='eventreports',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='eventreports', to='events.events'),
+            model_name="eventreports",
+            name="event",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="eventreports",
+                to="events.events",
+            ),
         ),
         migrations.AlterField(
-            model_name='eventtypes',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='eventtypes', to='events.events'),
+            model_name="eventtypes",
+            name="event",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="eventtypes",
+                to="events.events",
+            ),
         ),
     ]

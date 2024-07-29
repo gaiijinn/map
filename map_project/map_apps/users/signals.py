@@ -31,4 +31,6 @@ def set_achievement_user(sender, instance, created, **kwargs):
             ]
 
             AchievementsProgressStatus.objects.bulk_create(achievement_progress_list)
-            UserProfile.objects.create(user=instance, user_level=UserLevel.objects.first())
+            UserProfile.objects.create(
+                user=instance, user_level=UserLevel.objects.first()
+            )
