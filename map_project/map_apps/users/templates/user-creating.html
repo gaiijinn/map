@@ -1,16 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="{% static 'js/registration.js' %}" type="application/javascript"></script>
+    <title>registration</title>
 </head>
+
 <body>
-    <form action="#" class="registration">
-        <input type="email" class="registation__input" placeholder="Your email address" required>
-        <input type="text" class="registation__input" placeholder="Your name">
-        <input type="text" class="registation__input" placeholder="Your last name">
-        <input type="text" class="registation__input" placeholder="Password" required minlength="8">
-        <input type="text" class="registation__input" placeholder="Submit password" required minlength="8">
+    <form action="#" class="registration" id="registration-form">
+        <input type="email" class="registration__input" id="email" placeholder="Your email address" required>
+        <input type="text" class="registration__input" id="name" placeholder="Your name">
+        <input type="text" class="registration__input" id="last-name" placeholder="Your last name">
+        <input type="password" class="registration__input" id="password" placeholder="Password" required minlength="8">
+        <input type="password" class="registration__input" id="submit-password" placeholder="Submit password" required
+            minlength="8">
+        <button id="submit-registration">create new user</button>
     </form>
 </body>
+
 </html>

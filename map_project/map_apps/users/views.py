@@ -26,3 +26,6 @@ class UserProfileView(TemplateView):
 
 class UserCreationPage(TemplateView):
     template_name = "user-creating.html"
+
+class UserLoginPage(TemplateView):
+    template_name = "user-login.html"
