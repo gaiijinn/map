@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
 from ..users.models import User, UserProfile
-
+import uuid
 # Create your models here.
 
 
@@ -76,6 +76,8 @@ class EventStatusEmail(models.Model):
 
 
 class Events(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+
     EVENT_STATUS_CHOICES = (
         ("not_started", "Не почато"),
         ("in_process", "Проходить"),
@@ -194,6 +196,9 @@ class Events(models.Model):
                 event=self, status=self.result_revue, feedback=self.feedback
             )
         return instance
+
+    def __str__(self):
+        return f"{self.name} | {self.result_revue} | {self.event_status}"
 
 
 class EventImgs(models.Model):

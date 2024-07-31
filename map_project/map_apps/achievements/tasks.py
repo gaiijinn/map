@@ -23,16 +23,15 @@ def check_achievements_status(obj_id):
             is_achieved = obj.progress_rn >= obj.achievement.final_value
             new_progress = min(obj.progress_rn, obj.achievement.final_value)
 
+            AchievementsProgressStatus.objects.filter(id=obj_id).update(
+                progress_rn=new_progress
+            )
+
             # we are changing boolean field only when it has changed
             if obj.is_achieved != is_achieved:
                 AchievementsProgressStatus.objects.filter(id=obj_id).update(
                     is_achieved=is_achieved
                 )
 
-            AchievementsProgressStatus.objects.filter(id=obj_id).update(
-                progress_rn=new_progress
-            )
-
-            # checking if user is on last level
-            #if obj.user.user_profile.user_level != last_lvl:
-            level_calculating.delay(obj.user.id)
+                if obj.user.user_profile.user_level != last_lvl:
+                    level_calculating.delay(obj.user.id)

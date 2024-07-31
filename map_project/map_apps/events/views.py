@@ -17,7 +17,7 @@ class EventsPagination(PageNumberPagination):
 
 
 class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
-    pagination_class = (EventsPagination, )
+    pagination_class = None
     queryset = Events.objects.all()
     filterset_fields = (
         "event_types",
