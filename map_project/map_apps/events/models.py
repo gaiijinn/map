@@ -137,7 +137,7 @@ class Events(models.Model):
     address = models.CharField(_("Адреса проведення"), max_length=256)
     description = models.CharField(_("Опис події"), max_length=512)
 
-    main_photo = models.ImageField(upload_to="events/created/")
+    main_photo = models.ImageField(_("Зображення заставки"), upload_to="events/created/")
     coordinates = models.JSONField(_("Координати"))
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
