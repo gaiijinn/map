@@ -68,7 +68,7 @@ class EventsHistoryAdmin(SimpleHistoryAdmin):
         (
             "Дополнительная информация",
             {
-                "fields": ("address", "description", "coordinates"),
+                "fields": ("address", "description", "coordinates", "event_status"),
                 "classes": ("wide",),
             },
         ),

@@ -89,40 +89,11 @@ class EventImgSerializer(serializers.ModelSerializer):
         fields = ("img",)
 
 
-class EventRetrieveSerializer(serializers.ModelSerializer):
-    event_types = EventTypesSerializer(many=True, source="eventtypes", read_only=True)
+class EventRetrieveSerializer(EventListSerializer):
     event_guests = EventGuestsSerializer(
         many=True, read_only=True, source="eventguests"
     )
     eventimgs = EventImgSerializer(many=True, read_only=True)
-    creator = EventCreatorSerializer(read_only=True)
-    event_status = serializers.SerializerMethodField(read_only=True)
-    rating = serializers.SerializerMethodField(read_only=True)
 
-    class Meta:
-        model = Events
-        fields = (
-            "creator",
-            "event_status",
-            "event_age",
-            "rating",
-            "begin_day",
-            "begin_time",
-            "end_time",
-            "name",
-            "address",
-            "description",
-            "main_photo",
-            "coordinates",
-            "price",
-            "created_by_org",
-            "eventimgs",
-            "event_guests",
-            "event_types",
-        )
-
-    def get_event_status(self, obj):
-        return obj.get_event_status_display()
-
-    def get_rating(self, obj):
-        return obj.creator.rating
+    class Meta(EventListSerializer.Meta):
+        fields = EventListSerializer.Meta.fields + ('event_guests', 'eventimgs')
