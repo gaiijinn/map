@@ -1,22 +1,12 @@
 from django.views.generic import TemplateView
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-from rest_framework import mixins
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 
 from .models import UserProfile, CreatorSubscriptions
 from .serializers import UserProfileSerializer, CreatorSubscriptionsSerializer
-
+from .permissions import IsVerifPermission  # custom
 # Create your views here.
-
-
-class IsVerifPermission(BasePermission):
-    def has_permission(self, request, view):
-        user = request.user
-        if not user.is_verif:
-            raise PermissionDenied("У вас не активований акаунт")
-        return user.is_verif
 
 
 class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -29,7 +19,7 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
 
 
 class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, IsVerifPermission)
+    permission_classes = (IsAuthenticated, )
     queryset = CreatorSubscriptions.objects.all()
     serializer_class = CreatorSubscriptionsSerializer
 

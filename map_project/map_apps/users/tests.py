@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework import status
-from ..models import UserLevel, User
-from map_apps.achievements.models import Achievements, AchievementsProgressStatus
-from map_apps.achievements.serializers import AchievementProgressStatusSerializer
+from .models import UserLevel, User
+from ..achievements.models import Achievements, AchievementsProgressStatus
+from ..achievements.serializers import AchievementProgressStatusSerializer
 
 
 ACHIEVEMENT_STATUS_URL = reverse('achievements:achievement-status')

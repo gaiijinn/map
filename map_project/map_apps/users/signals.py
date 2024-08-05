@@ -5,14 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from .models import User, UserLevel, UserProfile, UserVerification
-
-
-@receiver(post_save, sender=UserVerification)
-def set_expired_time(sender, instance, created, **kwargs):
-    if created:
-        instance.expired_at = instance.created_at + timedelta(days=2)
-        instance.save()
+from .models import User, UserLevel, UserProfile
 
 
 @receiver(post_save, sender=User)

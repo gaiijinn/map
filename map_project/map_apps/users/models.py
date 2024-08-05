@@ -75,7 +75,6 @@ class User(AbstractUser):
     is_org = models.BooleanField(
         _("Зареєстрований як організація"), default=False, db_index=True
     )
-    is_verif = models.BooleanField(_("Верифікований"), default=False)
     rating = models.PositiveSmallIntegerField(_("Рейтинг"), default=0, blank=True)
 
     profile_picture = models.ImageField(
@@ -138,33 +137,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()} | {self.user_level}"
-
-
-class UserVerification(models.Model):
-    """Base email verif model with uuid4"""
-
-    user = models.ForeignKey(
-        to=User,
-        on_delete=models.CASCADE,
-        verbose_name=_("Користувач"),
-        related_name="userverification",
-    )
-    code = models.UUIDField(_("Код"), default=uuid.uuid4)
-    created_at = models.DateTimeField(_("Створено"), auto_now_add=True)
-    expired_at = models.DateTimeField(
-        _("Дійсний до"),
-        blank=True,
-        null=True,
-    )
-    # верификация условно будет на год выдаватся
-    verif_to = models.DateTimeField(
-        _("Активовано до"),
-        blank=True,
-        null=True,
-    )
-
-    def check_if_expired(self):
-        return True if now() < self.expired_at else False
-
-    def check_if_verif(self):
-        return True if now() < self.verif_to else False
