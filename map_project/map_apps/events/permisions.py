@@ -9,14 +9,10 @@ class CustomEventsPermissions(BasePermission):
         if request.method == 'POST':
             return request.user.is_authenticated
 
-        return request.user.is_authenticated and self._is_creator(request, view)
+        return request.user.is_authenticated
 
-    def _is_creator(self, request, view):
-        """из строки получаем ид, берем обьект если он есть то проверяем что юзер=создатель"""
-        if 'pk' in view.kwargs:
-            try:
-                obj = view.get_object()
-                return obj.creator == request.user
-            except view.get_queryset().model.DoesNotExist:
-                return False
-        return False
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return obj.creator == request.user

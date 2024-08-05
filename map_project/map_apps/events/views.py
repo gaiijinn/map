@@ -12,7 +12,7 @@ from .serializers import EventListSerializer, EventRetrieveSerializer
 # Create your views here.
 
 
-class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
     pagination_class = CustomEventPageNumberPagination
     queryset = Events.objects.all()
 
