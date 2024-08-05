@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 
-from .models import User, UserLevel, UserProfile
+from .models import User, UserLevel, UserProfile, CreatorSubscriptions
 
 
 class CustomCreateUserSerializer(UserCreateSerializer):
@@ -71,3 +71,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user_serializer.save()
 
         return super().update(instance, validated_data)
+
+
+class CreatorSubscriptionsSerializer(serializers.ModelSerializer):
+    """Непонятно еще какие данные нужны будут"""
+    creator = BaseUserProfileSerializer(read_only=True)
+    #creator_about_me = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CreatorSubscriptions
+        fields = ('id', 'creator')
+
+    def get_creator_about_me(self, obj):
+        creator_user_profile = obj.creator.user_profile
+        serializer = UserProfileSerializer(creator_user_profile)
+        data = serializer.data
+
+        if 'user' in data:
+            del data['user']
+
+        return data
