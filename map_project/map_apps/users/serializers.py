@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 
-from .models import User, UserLevel, UserProfile, CreatorSubscriptions
+from .models import CreatorSubscriptions, User, UserLevel, UserProfile
 
 
 class CustomCreateUserSerializer(UserCreateSerializer):
@@ -46,7 +46,6 @@ class BaseUserProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "email",
-            "is_verif",
             "rating",
             "profile_picture",
         )

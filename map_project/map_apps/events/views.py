@@ -1,24 +1,21 @@
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
 from .models import Events
+from .paginators import CustomEventPageNumberPagination
+from .permisions import CustomEventsPermissions
 from .serializers import EventListSerializer, EventRetrieveSerializer
 
 # Create your views here.
 
 
-class EventsPagination(PageNumberPagination):
-    page_size = 50
-
-
 class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
-    pagination_class = None
+    pagination_class = CustomEventPageNumberPagination
     queryset = Events.objects.all()
+
     filterset_fields = (
         "event_types",
         "event_status",

@@ -1,8 +1,8 @@
 from celery import shared_task
 from django.db import transaction
 
-from ..users.tasks import level_calculating
 from ..users.models import UserLevel
+from ..users.tasks import level_calculating
 
 
 @shared_task

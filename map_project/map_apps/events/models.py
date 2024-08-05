@@ -1,15 +1,14 @@
+import uuid
+
 from django.core.exceptions import ValidationError
-from django.core.validators import (
-    MaxValueValidator,
-    MinLengthValidator,
-    MinValueValidator,
-)
+from django.core.validators import (MaxValueValidator, MinLengthValidator,
+                                    MinValueValidator)
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
 from ..users.models import User, UserProfile
-import uuid
+
 # Create your models here.
 
 

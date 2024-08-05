@@ -1,11 +1,12 @@
 from django.views.generic import TemplateView
 from rest_framework import generics, status, viewsets
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from .models import UserProfile, CreatorSubscriptions
-from .serializers import UserProfileSerializer, CreatorSubscriptionsSerializer
+from .models import CreatorSubscriptions, UserProfile
 from .permissions import IsVerifPermission  # custom
+from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
+
 # Create your views here.
 
 

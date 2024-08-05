@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import OrganizationImgs, OrganizationLinks, Organizations, OrgTypes
+from .models import (OrganizationImgs, OrganizationLinks, Organizations,
+                     OrgTypes)
 
 # Register your models here.
 
