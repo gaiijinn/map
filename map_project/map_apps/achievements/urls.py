@@ -7,8 +7,8 @@ app_name = "achievements"
 
 urlpatterns = [
     path(
-        "api/user-achievement-status/",
+        "api/v1/user-achievement-status/",
         AchievementsStatusApiView.as_view(),
-        name="achievement-status",
+        name="achievement-status-v1",
     ),
 ]

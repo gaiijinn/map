@@ -6,8 +6,8 @@ from .views import EventReadOnlyModelViewSet
 app_name = "events"
 
 router = DefaultRouter()
-router.register("api/events", EventReadOnlyModelViewSet)
+router.register("events", EventReadOnlyModelViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/v1/", include(router.urls)),
 ]

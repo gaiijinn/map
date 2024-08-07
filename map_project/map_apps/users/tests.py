@@ -8,7 +8,7 @@ from ..achievements.models import Achievements, AchievementsProgressStatus
 from ..achievements.serializers import AchievementProgressStatusSerializer
 from .models import User, UserLevel
 
-ACHIEVEMENT_STATUS_URL = reverse('achievements:achievement-status')
+ACHIEVEMENT_STATUS_URL = reverse('achievements:achievement-status-v1')
 
 
 def user_creating(**params):
