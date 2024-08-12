@@ -1,6 +1,5 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.timezone import now
 
 from .models import EventGuests, Events, EventStatusEmail
 from .tasks import task_event_email
