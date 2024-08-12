@@ -13,8 +13,8 @@ class EventList:
         self.exclude = exclude
 
     def get_events_to_update(self, current_day, current_time):
-        events = (Events.objects.filter(result_revue=self.result_revue, begin_day=current_day, begin_time__lte=current_time).
-                  exclude(event_status=self.exclude))
+        events = (Events.objects.filter(result_revue=self.result_revue, begin_day=current_day,
+                                        begin_time__lte=current_time).exclude(event_status=self.exclude))
 
         return events
 

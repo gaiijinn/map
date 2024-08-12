@@ -167,9 +167,6 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
         "django_filters.rest_framework.DjangoFilterBackend",
     ),
-    'DEFAULT_PARSER_CLASSES': (
-        "rest_framework.parsers.MultiPartParser",
-    ),
 }
 
 

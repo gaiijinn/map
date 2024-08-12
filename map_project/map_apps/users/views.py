@@ -14,6 +14,7 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all().select_related("user", "user_level")
     permission_classes = (IsAuthenticated, )
+    parser_classes = (parsers.MultiPartParser, parsers.JSONParser)
 
     def get_object(self):
         return self.queryset.get(user=self.request.user)
@@ -32,7 +33,7 @@ class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
         serializer.save(subscriber=self.request.user.user_profile)
 
 
-class UserProfileView(TemplateView):
+class UserProfilePage(TemplateView):
     template_name = "user-profile.html"
 
 

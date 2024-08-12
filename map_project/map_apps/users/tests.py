@@ -5,10 +5,11 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from ..achievements.serializers import AchievementProgressStatusSerializer
-from .models import User, UserLevel
+from .models import User, UserLevel, UserProfile
+from .serializers import UserProfileSerializer
 
 ACHIEVEMENT_STATUS_URL = reverse('achievements:achievement-status-v1')
+USER_UPDATE = reverse('users:user-profile-update-v1')
 
 
 def user_creating(**params):
@@ -17,7 +18,7 @@ def user_creating(**params):
 
 def creating_first_level(**params):
     defaults = {
-        'level_name': 'Початківець',
+        'level_name': 'Новачок',
         'low_range': 0,
         'top_range': 10
     }
@@ -81,25 +82,53 @@ class PrivateUserAPITest(TestCase):
         self.create_user_url = '/api/djoser/users/'
         self.client = APIClient()
 
-    def test_after_creating_manipulating(self):
-        first_lvl = creating_first_level()
-        first_achievement = creating_base_achievement()
-        second_achievement = creating_base_achievement(for_def_user=False)
+        self.first_lvl = creating_first_level()
+        self.first_achievement = creating_base_achievement()
+        self.second_achievement = creating_base_achievement(for_def_user=False)
 
+        self.payload = {
+            "email": 'test@example.com',
+            "password": 'testpass123',
+            "first_name": 'Vlad',
+            "last_name": 'Ruban',
+        }
+        self.user = user_creating(**self.payload)
+
+        self.client.force_authenticate(user=self.user)
+
+    def test_after_creating_manipulating(self):
+        self.assertEquals(self.user.user_profile.user_level, self.first_lvl)
+
+        user_achievement = AchievementsProgressStatus.objects.filter(user=self.user)
+        self.assertEqual(user_achievement.count(), 1)
+
+    def test_get_user(self):
+        response = self.client.get(USER_UPDATE)
+        self.assertEqual(response.status_code, 200)
+
+        response_data = response.json()
+
+        user_profile = UserProfile.objects.get(user=self.user)
+        serializer = UserProfileSerializer(user_profile)
+
+        self.assertEqual(response_data, serializer.data)
+
+    def test_user_retrieve_success(self):
         payload = {
-            'email': 'test@example.com',
-            'password': 'test123',
-            're_password': 'test123',
-            'first_name': 'vlad',
-            'last_name': 'ruban'
+            "about_me": "123g45",
+            "user": {
+                "last_name": "Don",
+            }
         }
 
-        result = self.client.post(self.create_user_url, payload)
-        self.assertEqual(result.status_code, status.HTTP_201_CREATED)
+        request = self.client.patch(USER_UPDATE, payload, format='json')
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
 
-        user = User.objects.get(email=payload['email'])
-        self.assertEquals(user.user_profile.user_level, first_lvl)
+        self.user.user_profile.refresh_from_db()
+        self.user.refresh_from_db()
 
-        user_achievement = AchievementsProgressStatus.objects.filter(user=user)
-        self.assertEqual(user.achievementsprogressstatus.count(), user_achievement.count())
+        self.assertEqual(self.user.user_profile.about_me, payload["about_me"])
+        self.assertEqual(self.user.last_name, payload["user"]["last_name"])
+        self.assertEqual(self.user.first_name, self.payload['first_name'])
+
 
