@@ -32,9 +32,9 @@ def creating_base_achievement(**params):
     defaults = {
         'achievement_name': 'Початківець',
         'descr_achievement': 'some text',
-        'given_exp': 10,
-        'final_value': 10,
-        'for_organization': True,
+        'given_exp': 11,
+        'final_value': 1,
+        'for_organization': False,
         'for_def_user': True,
     }
 
@@ -131,4 +131,22 @@ class PrivateUserAPITest(TestCase):
         self.assertEqual(self.user.last_name, payload["user"]["last_name"])
         self.assertEqual(self.user.first_name, self.payload['first_name'])
 
+    def test_user_retrieve_failed(self):
+        payload = {
+            "user": {
+                "email": "somenew@example.com",
+                'password': "newpas11111",
+                'rating': "8",
+            }
+        }
 
+        request = self.client.patch(USER_UPDATE, payload, format='json')
+        self.user.refresh_from_db()
+
+        self.assertNotEqual(self.user.email, payload["user"]["email"])
+        self.assertNotEqual(self.user.rating, payload["user"]["rating"])
+        self.assertFalse(self.user.check_password(payload["user"]["password"]))
+
+    def test_user_deleting(self):
+        request = self.client.delete(USER_UPDATE)
+        self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
