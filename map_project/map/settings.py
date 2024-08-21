@@ -68,6 +68,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+
+    # "map.middleware.TestMiddleware",
 ]
 
 ROOT_URLCONF = "map.urls"

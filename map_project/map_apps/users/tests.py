@@ -99,8 +99,7 @@ class PrivateUserAPITest(TestCase):
     def test_after_creating_manipulating(self):
         self.assertEquals(self.user.user_profile.user_level, self.first_lvl)
 
-        user_achievement = AchievementsProgressStatus.objects.filter(user=self.user)
-        self.assertEqual(user_achievement.count(), 1)
+        self.assertEqual(self.user.achievementsprogressstatus.all().count(), 1)
 
     def test_get_user(self):
         response = self.client.get(USER_UPDATE)
@@ -135,8 +134,8 @@ class PrivateUserAPITest(TestCase):
         payload = {
             "user": {
                 "email": "somenew@example.com",
-                'password': "newpas11111",
-                'rating': "8",
+                "password": "newpas11111",
+                "rating": "8",
             }
         }
 
