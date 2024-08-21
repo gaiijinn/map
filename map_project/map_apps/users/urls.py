@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (CreatorSubscriptionsModelViewSet, UserCreationPage,
                     UserLoginPage, UserProfileRetrieveUpdateDestroyAPIView,
-                    UserProfileView)
+                    UserProfilePage)
 
 app_name = "users"
 
@@ -11,14 +11,14 @@ router = DefaultRouter()
 router.register('subscriptions', CreatorSubscriptionsModelViewSet)
 
 urlpatterns = [
-    path("user-profile/", UserProfileView.as_view(), name="user-profile"),
     path(
-        "api/user-profile-update/",
+        "api/v1/user-profile-update/",
         UserProfileRetrieveUpdateDestroyAPIView.as_view(),
-        name="user-profile-update",
+        name="user-profile-update-v1",
     ),
     path("user-registration/", UserCreationPage.as_view(), name='user-registration'),
     path("user-login/", UserLoginPage.as_view(), name='user-login'),
-]
+    path("user-profile/", UserProfilePage.as_view(), name="user-profile"),
 
-urlpatterns += router.urls
+    path('api/v1/', include(router.urls)),
+]

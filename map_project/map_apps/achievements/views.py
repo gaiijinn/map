@@ -1,6 +1,7 @@
 from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from rest_framework import generics, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
@@ -24,7 +25,12 @@ class AchievementsStatusApiView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        total = self.get_queryset().aggregate(total=Count("id"))
+        total = cache.get("total")
+
+        if total is None:
+            total = self.get_queryset().aggregate(total=Count("id"))
+            cache.set("total", total, 24 * 60 * 60)
+
         achieved = (
             self.get_queryset()
             .filter(is_achieved=True)

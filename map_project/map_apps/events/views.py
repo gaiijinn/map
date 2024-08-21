@@ -3,18 +3,21 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
+from rest_framework import viewsets, filters
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Events
 from .paginators import CustomEventPageNumberPagination
-from .permisions import CustomEventsPermissions
 from .serializers import EventListSerializer, EventRetrieveSerializer
 
 # Create your views here.
 
 
-class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
+class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Events.objects.all().order_by('-id')
     pagination_class = CustomEventPageNumberPagination
-    queryset = Events.objects.all()
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
 
     filterset_fields = (
         "event_types",
@@ -23,6 +26,9 @@ class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
         "begin_day",
         "created_by_org",
     )
+
+    search_fields = ('name', )
+    ordering_fields = ('price',)
 
     def get_queryset(self):
         if self.action == "list":
@@ -34,7 +40,7 @@ class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
                     .select_related(
                         "creator", "creator__user_profile", "creator__organizations"
                     )
-                    .prefetch_related("eventtypes__event_type")
+                    .prefetch_related("eventtypes__event_type").order_by('-id')
                 )
             )
         return (
@@ -43,7 +49,7 @@ class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
             .select_related(
                 "creator", "creator__user_profile", "creator__organizations"
             )
-            .prefetch_related("eventtypes__event_type", "eventguests__guest")
+            .prefetch_related("eventtypes__event_type", "eventguests__guest").order_by('-id')
         )
 
     def get_serializer_class(self):
