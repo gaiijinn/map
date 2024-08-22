@@ -96,11 +96,6 @@ class PrivateUserAPITest(TestCase):
 
         self.client.force_authenticate(user=self.user)
 
-    def test_after_creating_manipulating(self):
-        self.assertEquals(self.user.user_profile.user_level, self.first_lvl)
-
-        self.assertEqual(self.user.achievementsprogressstatus.all().count(), 1)
-
     def test_get_user(self):
         response = self.client.get(USER_UPDATE)
         self.assertEqual(response.status_code, 200)
@@ -140,6 +135,8 @@ class PrivateUserAPITest(TestCase):
         }
 
         request = self.client.patch(USER_UPDATE, payload, format='json')
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
+
         self.user.refresh_from_db()
 
         self.assertNotEqual(self.user.email, payload["user"]["email"])

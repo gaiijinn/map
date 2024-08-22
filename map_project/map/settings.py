@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     "map_apps.achievements.apps.AchievementsConfig",
     "map_apps.organizations.apps.OrganizationsConfig",
     "map_apps.events.apps.EventsConfig",
-    "map_apps.subscriptions.apps.SubscriptionsConfig",
     "map_apps.main.apps.MainConfig",
 ]
 
@@ -190,6 +189,8 @@ CACHES = {
 
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+
+CELERY_TASK_ALWAYS_EAGER = True
 
 # Email
 
