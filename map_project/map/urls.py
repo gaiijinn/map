@@ -25,21 +25,17 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     # apps
     path("", include("map_apps.main.urls")),
     path("users/", include("map_apps.users.urls")),
     path("achievements/", include("map_apps.achievements.urls")),
     path("organization/", include("map_apps.organizations.urls")),
     path("events/", include("map_apps.events.urls")),
-
     # register
     path("api/djoser/", include("djoser.urls")),
-
     # authentication
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-
     # api docs
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(

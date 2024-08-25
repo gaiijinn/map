@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
+
 from django.conf import settings
 from django.core.mail import send_mail
-from abc import ABC, abstractmethod
 
 
 class EmailSender(ABC):
@@ -30,7 +31,7 @@ class RejectEmailSender(EmailSender):
     def send_email(self, recipient_list: list, fail_silently=False):
         send_mail(
             "Відмова",
-            f'Відмова по причині: {self.event.feedback}',
+            f"Відмова по причині: {self.event.feedback}",
             settings.EMAIL_HOST_USER,
             recipient_list,
             fail_silently=fail_silently,

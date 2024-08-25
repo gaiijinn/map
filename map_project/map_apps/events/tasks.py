@@ -1,9 +1,8 @@
 from celery import shared_task
 
 from .models import Events
-
-from .services.event_service import TimeProvider, EventList, EventUpdater
 from .services.email_service import EmailController
+from .services.event_service import EventList, EventUpdater, TimeProvider
 
 
 @shared_task

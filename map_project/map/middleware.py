@@ -16,6 +16,8 @@ class TestMiddleware:
         execution_time = time.time() - start_time
 
         if execution_time > 5:
-            return HttpResponseServerError(f"Request is too long: {execution_time} seconds, TestMiddleware")
+            return HttpResponseServerError(
+                f"Request is too long: {execution_time} seconds, TestMiddleware"
+            )
 
         return response

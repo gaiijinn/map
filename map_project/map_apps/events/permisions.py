@@ -6,7 +6,7 @@ class CustomEventsPermissions(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'POST':
+        if request.method == "POST":
             return request.user.is_authenticated
 
         return request.user.is_authenticated

@@ -1,4 +1,5 @@
 from django.utils import timezone
+
 from ..models import Events
 
 
@@ -13,8 +14,11 @@ class EventList:
         self.exclude = exclude
 
     def get_events_to_update(self, current_day, current_time):
-        events = (Events.objects.filter(result_revue=self.result_revue, begin_day=current_day,
-                                        begin_time__lte=current_time).exclude(event_status=self.exclude))
+        events = Events.objects.filter(
+            result_revue=self.result_revue,
+            begin_day=current_day,
+            begin_time__lte=current_time,
+        ).exclude(event_status=self.exclude)
         return events
 
 
@@ -28,7 +32,9 @@ class EventUpdater:
         current_time = localtime.time()
         current_day = localtime.date()
 
-        events = self.event_list.get_events_to_update(current_day=current_day, current_time=current_time)
+        events = self.event_list.get_events_to_update(
+            current_day=current_day, current_time=current_time
+        )
 
         for event in events:
             if event.end_time <= current_time:

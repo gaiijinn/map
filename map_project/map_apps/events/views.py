@@ -1,11 +1,9 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
-from rest_framework import generics, status, viewsets
-from rest_framework.response import Response
-from rest_framework import viewsets, filters
-
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, status, viewsets
+from rest_framework.response import Response
 
 from .models import Events
 from .paginators import CustomEventPageNumberPagination
@@ -15,9 +13,13 @@ from .serializers import EventListSerializer, EventRetrieveSerializer
 
 
 class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Events.objects.all().order_by('-id')
+    queryset = Events.objects.all().order_by("-id")
     pagination_class = CustomEventPageNumberPagination
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
+    filter_backends = (
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    )
 
     filterset_fields = (
         "event_types",
@@ -27,21 +29,20 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
         "created_by_org",
     )
 
-    search_fields = ('name', )
-    ordering_fields = ('price',)
+    search_fields = ("name",)
+    ordering_fields = ("price",)
 
     def get_queryset(self):
         if self.action == "list":
             return (
-                (
-                    Events.objects.all().
-                    filter(result_revue="approved")
-                    .exclude(event_status="ended")
-                    .select_related(
-                        "creator", "creator__user_profile", "creator__organizations"
-                    )
-                    .prefetch_related("eventtypes__event_type").order_by('-id')
+                Events.objects.all()
+                .filter(result_revue="approved")
+                .exclude(event_status="ended")
+                .select_related(
+                    "creator", "creator__user_profile", "creator__organizations"
                 )
+                .prefetch_related("eventtypes__event_type")
+                .order_by("-id")
             )
         return (
             Events.objects.all()
@@ -49,7 +50,8 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
             .select_related(
                 "creator", "creator__user_profile", "creator__organizations"
             )
-            .prefetch_related("eventtypes__event_type", "eventguests__guest").order_by('-id')
+            .prefetch_related("eventtypes__event_type", "eventguests__guest")
+            .order_by("-id")
         )
 
     def get_serializer_class(self):

@@ -1,8 +1,7 @@
 from django.views.generic import TemplateView
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, parsers, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import parsers
 
 from .models import CreatorSubscriptions, UserProfile
 from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
@@ -13,7 +12,7 @@ from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
 class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all().select_related("user", "user_level")
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     parser_classes = (parsers.MultiPartParser, parsers.JSONParser)
 
     def get_object(self):
@@ -21,13 +20,14 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
 
 
 class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     queryset = CreatorSubscriptions.objects.all()
     serializer_class = CreatorSubscriptionsSerializer
 
     def get_queryset(self):
-        return (self.queryset.filter(subscriber=self.request.user.user_profile).
-                select_related('creator', 'creator__user_profile'))
+        return self.queryset.filter(
+            subscriber=self.request.user.user_profile
+        ).select_related("creator", "creator__user_profile")
 
     def perform_create(self, serializer):
         serializer.save(subscriber=self.request.user.user_profile)

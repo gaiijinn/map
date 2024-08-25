@@ -1,4 +1,5 @@
 from celery import shared_task
+
 from .models import AchievementsProgressStatus
 from .services.achievement_service import AchievementController
 

@@ -75,7 +75,9 @@ class EventStatusEmail(models.Model):
 
 
 class Events(models.Model):
-    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        primary_key=True, unique=True, default=uuid.uuid4, editable=False
+    )
 
     EVENT_STATUS_CHOICES = (
         ("not_started", "Не почато"),
@@ -136,7 +138,9 @@ class Events(models.Model):
     address = models.CharField(_("Адреса проведення"), max_length=256)
     description = models.CharField(_("Опис події"), max_length=512)
 
-    main_photo = models.ImageField(_("Зображення заставки"), upload_to="events/created/")
+    main_photo = models.ImageField(
+        _("Зображення заставки"), upload_to="events/created/"
+    )
     coordinates = models.JSONField(_("Координати"))
     price = models.PositiveSmallIntegerField(_("Ціна за вхід"), blank=True, default=0)
     created_by_org = models.BooleanField(_("Створено організацією?"), default=False)
@@ -183,11 +187,15 @@ class Events(models.Model):
             models.Index(fields=["event_status", "event_age"]),
         ]
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         if self.result_revue == "approved":
             self.is_repeatable = False
 
-        instance = super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+        instance = super().save(
+            force_insert=False, force_update=False, using=None, update_fields=None
+        )
 
         if self.result_revue != "in_revue":
             """To send uniq emails status/feedback to user email"""

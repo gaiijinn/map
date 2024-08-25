@@ -8,8 +8,8 @@ from ..achievements.models import Achievements, AchievementsProgressStatus
 from .models import User, UserLevel, UserProfile
 from .serializers import UserProfileSerializer
 
-ACHIEVEMENT_STATUS_URL = reverse('achievements:achievement-status-v1')
-USER_UPDATE = reverse('users:user-profile-update-v1')
+ACHIEVEMENT_STATUS_URL = reverse("achievements:achievement-status-v1")
+USER_UPDATE = reverse("users:user-profile-update-v1")
 
 
 def user_creating(**params):
@@ -17,11 +17,7 @@ def user_creating(**params):
 
 
 def creating_first_level(**params):
-    defaults = {
-        'level_name': 'Новачок',
-        'low_range': 0,
-        'top_range': 10
-    }
+    defaults = {"level_name": "Новачок", "low_range": 0, "top_range": 10}
 
     defaults.update(params)
 
@@ -30,12 +26,12 @@ def creating_first_level(**params):
 
 def creating_base_achievement(**params):
     defaults = {
-        'achievement_name': 'Початківець',
-        'descr_achievement': 'some text',
-        'given_exp': 11,
-        'final_value': 1,
-        'for_organization': False,
-        'for_def_user': True,
+        "achievement_name": "Початківець",
+        "descr_achievement": "some text",
+        "given_exp": 11,
+        "final_value": 1,
+        "for_organization": False,
+        "for_def_user": True,
     }
 
     defaults.update(params)
@@ -46,31 +42,31 @@ def creating_base_achievement(**params):
 class PublicUserApiTest(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
-        self.create_user_url = '/api/djoser/users/'
+        self.create_user_url = "/api/djoser/users/"
 
     def test_user_access_creating(self):
         payload = {
-            'email': 'test@example.com',
-            'password': 'test123',
-            're_password': 'test123',
-            'first_name': 'vlad',
-            'last_name': 'ruban'
+            "email": "test@example.com",
+            "password": "test123",
+            "re_password": "test123",
+            "first_name": "vlad",
+            "last_name": "ruban",
         }
 
         result = self.client.post(self.create_user_url, payload)
         self.assertEquals(result.status_code, status.HTTP_201_CREATED)
-        self.assertNotIn('password', result.data)
+        self.assertNotIn("password", result.data)
 
-        user = get_user_model().objects.get(email=payload['email'])
-        self.assertTrue(user.check_password(payload['password']))
+        user = get_user_model().objects.get(email=payload["email"])
+        self.assertTrue(user.check_password(payload["password"]))
 
     def test_failed_user_creating(self):
         payload = {
-            'email': 'test@example.com',
-            'password': 'test123',
-            're_password': 'test1232',
-            'first_name': 'vlad',
-            'last_name': 'ruban'
+            "email": "test@example.com",
+            "password": "test123",
+            "re_password": "test1232",
+            "first_name": "vlad",
+            "last_name": "ruban",
         }
 
         result = self.client.post(self.create_user_url, payload)
@@ -79,7 +75,7 @@ class PublicUserApiTest(TestCase):
 
 class PrivateUserAPITest(TestCase):
     def setUp(self) -> None:
-        self.create_user_url = '/api/djoser/users/'
+        self.create_user_url = "/api/djoser/users/"
         self.client = APIClient()
 
         self.first_lvl = creating_first_level()
@@ -87,10 +83,10 @@ class PrivateUserAPITest(TestCase):
         self.second_achievement = creating_base_achievement(for_def_user=False)
 
         self.payload = {
-            "email": 'test@example.com',
-            "password": 'testpass123',
-            "first_name": 'Vlad',
-            "last_name": 'Ruban',
+            "email": "test@example.com",
+            "password": "testpass123",
+            "first_name": "Vlad",
+            "last_name": "Ruban",
         }
         self.user = user_creating(**self.payload)
 
@@ -112,10 +108,10 @@ class PrivateUserAPITest(TestCase):
             "about_me": "123g45",
             "user": {
                 "last_name": "Don",
-            }
+            },
         }
 
-        request = self.client.patch(USER_UPDATE, payload, format='json')
+        request = self.client.patch(USER_UPDATE, payload, format="json")
         self.assertEqual(request.status_code, status.HTTP_200_OK)
 
         self.user.user_profile.refresh_from_db()
@@ -123,7 +119,7 @@ class PrivateUserAPITest(TestCase):
 
         self.assertEqual(self.user.user_profile.about_me, payload["about_me"])
         self.assertEqual(self.user.last_name, payload["user"]["last_name"])
-        self.assertEqual(self.user.first_name, self.payload['first_name'])
+        self.assertEqual(self.user.first_name, self.payload["first_name"])
 
     def test_user_retrieve_failed(self):
         payload = {
@@ -134,7 +130,7 @@ class PrivateUserAPITest(TestCase):
             }
         }
 
-        request = self.client.patch(USER_UPDATE, payload, format='json')
+        request = self.client.patch(USER_UPDATE, payload, format="json")
         self.assertEqual(request.status_code, status.HTTP_200_OK)
 
         self.user.refresh_from_db()

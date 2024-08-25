@@ -16,26 +16,77 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Achievements',
+            name="Achievements",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('achievement_name', models.CharField(max_length=128)),
-                ('descr_achievement', models.CharField(blank=True, max_length=256)),
-                ('given_exp', models.PositiveSmallIntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)])),
-                ('final_value', models.PositiveSmallIntegerField(default=0, validators=[django.core.validators.MinValueValidator(1)])),
-                ('for_organization', models.BooleanField(default=False)),
-                ('for_def_user', models.BooleanField(default=True)),
-                ('achievement_image', models.ImageField(blank=True, upload_to='achiev_img/')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("achievement_name", models.CharField(max_length=128)),
+                ("descr_achievement", models.CharField(blank=True, max_length=256)),
+                (
+                    "given_exp",
+                    models.PositiveSmallIntegerField(
+                        default=0,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
+                (
+                    "final_value",
+                    models.PositiveSmallIntegerField(
+                        default=0,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                    ),
+                ),
+                ("for_organization", models.BooleanField(default=False)),
+                ("for_def_user", models.BooleanField(default=True)),
+                (
+                    "achievement_image",
+                    models.ImageField(blank=True, upload_to="achiev_img/"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='AchievementsProgressStatus',
+            name="AchievementsProgressStatus",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('progress_rn', models.PositiveSmallIntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)])),
-                ('is_achieved', models.BooleanField(db_index=True, default=False)),
-                ('achievement', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='achievementsprogressstatus', to='achievements.achievements')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='achievementsprogressstatus', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "progress_rn",
+                    models.PositiveSmallIntegerField(
+                        default=0,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
+                ("is_achieved", models.BooleanField(db_index=True, default=False)),
+                (
+                    "achievement",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="achievementsprogressstatus",
+                        to="achievements.achievements",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="achievementsprogressstatus",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

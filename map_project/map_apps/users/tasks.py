@@ -1,6 +1,6 @@
 from celery import shared_task
-from django.db.models import Sum
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
 
 
 @shared_task
@@ -8,7 +8,12 @@ def level_calculating(user_id: int):
     from ..achievements.models import AchievementsProgressStatus
     from .models import UserLevel, UserProfile
 
-    user = get_user_model().objects.select_related("user_profile").filter(id=user_id).first()
+    user = (
+        get_user_model()
+        .objects.select_related("user_profile")
+        .filter(id=user_id)
+        .first()
+    )
 
     if user:
         total_exp = (

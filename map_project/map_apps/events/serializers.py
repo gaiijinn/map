@@ -96,4 +96,4 @@ class EventRetrieveSerializer(EventListSerializer):
     eventimgs = EventImgSerializer(many=True, read_only=True)
 
     class Meta(EventListSerializer.Meta):
-        fields = EventListSerializer.Meta.fields + ('event_guests', 'eventimgs')
+        fields = EventListSerializer.Meta.fields + ("event_guests", "eventimgs")

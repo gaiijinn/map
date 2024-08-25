@@ -15,38 +15,111 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='OrgTypes',
+            name="OrgTypes",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
             ],
         ),
         migrations.CreateModel(
-            name='Organizations',
+            name="Organizations",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=256)),
-                ('address', models.CharField(blank=True, max_length=256, null=True)),
-                ('about_us', models.CharField(blank=True, max_length=512, null=True)),
-                ('org_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organizations.orgtypes')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='organizations', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                ("address", models.CharField(blank=True, max_length=256, null=True)),
+                ("about_us", models.CharField(blank=True, max_length=512, null=True)),
+                (
+                    "org_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="organizations.orgtypes",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="organizations",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrganizationLinks',
+            name="OrganizationLinks",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('link_type', models.CharField(choices=[('facebook', 'Facebook'), ('twitter', 'Twitter'), ('linkedin', 'LinkedIn'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')], default='other', max_length=20)),
-                ('link', models.URLField(max_length=256)),
-                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organizationlinks', to='organizations.organizations')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "link_type",
+                    models.CharField(
+                        choices=[
+                            ("facebook", "Facebook"),
+                            ("twitter", "Twitter"),
+                            ("linkedin", "LinkedIn"),
+                            ("instagram", "Instagram"),
+                            ("website", "Website"),
+                            ("other", "Other"),
+                        ],
+                        default="other",
+                        max_length=20,
+                    ),
+                ),
+                ("link", models.URLField(max_length=256)),
+                (
+                    "org",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="organizationlinks",
+                        to="organizations.organizations",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrganizationImgs',
+            name="OrganizationImgs",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('photo', models.ImageField(upload_to='org/')),
-                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organizationimgs', to='organizations.organizations')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("photo", models.ImageField(upload_to="org/")),
+                (
+                    "org",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="organizationimgs",
+                        to="organizations.organizations",
+                    ),
+                ),
             ],
         ),
     ]

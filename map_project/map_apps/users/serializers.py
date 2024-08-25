@@ -74,19 +74,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class CreatorSubscriptionsSerializer(serializers.ModelSerializer):
     """Непонятно еще какие данные нужны будут"""
+
     creator = BaseUserProfileSerializer(read_only=True)
-    #creator_about_me = serializers.SerializerMethodField()
+    # creator_about_me = serializers.SerializerMethodField()
 
     class Meta:
         model = CreatorSubscriptions
-        fields = ('id', 'creator')
+        fields = ("id", "creator")
 
     def get_creator_about_me(self, obj):
         creator_user_profile = obj.creator.user_profile
         serializer = UserProfileSerializer(creator_user_profile)
         data = serializer.data
 
-        if 'user' in data:
-            del data['user']
+        if "user" in data:
+            del data["user"]
 
         return data

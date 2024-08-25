@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "debug_toolbar",
     "rest_framework",
     "simple_history",
@@ -49,7 +48,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "djoser",
     "django_filters",
-
     "map_apps.users.apps.UsersConfig",
     "map_apps.achievements.apps.AchievementsConfig",
     "map_apps.organizations.apps.OrganizationsConfig",
@@ -67,7 +65,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
-
     # "map.middleware.TestMiddleware",
 ]
 
@@ -165,9 +162,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_FILTER_BACKENDS": (
-        "django_filters.rest_framework.DjangoFilterBackend",
-    ),
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
 
@@ -239,10 +234,10 @@ SIMPLE_JWT = {
 # Djoser
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    "PASSWORD_RESET_CONFIRM_URL": "#/password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "#/activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
     "SERIALIZERS": {
         "user_create": "map_apps.users.serializers.CustomCreateUserSerializer",
     },

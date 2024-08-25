@@ -1,10 +1,12 @@
-from abc import ABC, abstractmethod
+from .achievement_abc import BaseIsAchievedUpdater, BaseProgressUpdater
+
+from map_apps.users.service.level_calculating_service import \
+    UserLevelCalculating
 
 from ..models import AchievementsProgressStatus
-from map_apps.users.service.level_calculating_service import UserLevelCalculating
 
 
-class ProgressUpdater:
+class ProgressUpdater(BaseProgressUpdater):
     def __init__(self, achievement_obj):
         self.obj = achievement_obj
 
@@ -13,11 +15,11 @@ class ProgressUpdater:
         return new_progress
 
 
-class IsAchievedUpdater:
+class IsAchievedUpdater(BaseIsAchievedUpdater):
     def __init__(self, achievement_obj):
         self.obj = achievement_obj
 
-    def get_is_achieved(self):
+    def get_is_achieved(self) -> bool:
         is_achieved = self.obj.progress_rn >= self.obj.achievement.final_value
         return is_achieved
 
@@ -34,7 +36,8 @@ class AchievementStatusUpdater:
 
         if is_achieved != self.obj.is_achieved:
             AchievementsProgressStatus.objects.filter(id=self.obj.id).update(
-                is_achieved=is_achieved, progress_rn=new_progress)
+                is_achieved=is_achieved, progress_rn=new_progress
+            )
             return True
 
         else:
@@ -45,15 +48,17 @@ class AchievementStatusUpdater:
 
 
 class AchievementController:
-    def __init__(self, achievement_obj, progress_updater=None, is_achieved_updater=None, user_level_calculating=None):
+    def __init__(self, achievement_obj, progress_updater=ProgressUpdater, is_achieved_updater=IsAchievedUpdater,
+                 user_level_calculating=UserLevelCalculating):
         self.obj = achievement_obj
-
-        self.progress_updater = progress_updater or ProgressUpdater(self.obj)
-        self.is_achieved_updater = is_achieved_updater or IsAchievedUpdater(self.obj)
-        self.user_level_calculating = user_level_calculating or UserLevelCalculating(self.obj.user)
+        self.progress_updater = progress_updater(self.obj)
+        self.is_achieved_updater = is_achieved_updater(self.obj)
+        self.user_level_calculating = user_level_calculating(self.obj.user)
 
     def achievement_status_processing(self):
-        achievement_status_updater = AchievementStatusUpdater(self.obj, self.progress_updater, self.is_achieved_updater)
+        achievement_status_updater = AchievementStatusUpdater(
+            self.obj, self.progress_updater, self.is_achieved_updater
+        )
 
         if achievement_status_updater.update_achievement_status():
             user_level_calculating = UserLevelCalculating(self.obj.user)
