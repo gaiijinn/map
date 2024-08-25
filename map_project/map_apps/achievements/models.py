@@ -39,7 +39,7 @@ class AchievementsProgressStatus(models.Model):
     progress_rn = models.PositiveSmallIntegerField(
         default=0, validators=[MinValueValidator(0)]
     )
-    is_achieved = models.BooleanField(default=False, db_index=True)
+    is_achieved = models.BooleanField(default=False)
 
     def __str__(self):
         return (

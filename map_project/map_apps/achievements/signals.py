@@ -3,7 +3,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ..users.models import User
-from ..users.tasks import level_calculating
 from .models import Achievements, AchievementsProgressStatus
 from .tasks import check_achievements_status
 

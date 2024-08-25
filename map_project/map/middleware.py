@@ -12,10 +12,10 @@ class TestMiddleware:
     def __call__(self, request):
         start_time = time.time()
         response = self.get_response(request)
-        time.sleep(1)
+        time.sleep(6)
         execution_time = time.time() - start_time
 
         if execution_time > 5:
-            return HttpResponseServerError(f"Request is too long: {execution_time} seconds, mid 1")
+            return HttpResponseServerError(f"Request is too long: {execution_time} seconds, TestMiddleware")
 
         return response

@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+import time
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
 from ..achievements.tasks import check_achievements_status
@@ -95,6 +96,7 @@ class ModelAchievementsStatusTest(TestCase):
         self.assertTrue(achievement_progress_status.is_achieved)
 
         self.user.user_profile.refresh_from_db()
+
         self.assertEqual(self.user.user_profile.user_level, self.second_lvl)
 
     def test_adding_new_achievements_to_users(self):
