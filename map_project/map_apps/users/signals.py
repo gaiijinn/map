@@ -10,7 +10,7 @@ from .models import User, UserLevel, UserProfile
 
 @receiver(post_save, sender=User)
 def set_achievement_user(sender, instance, created, **kwargs):
-    """Set achievements for User after success reg or level calculating"""
+    """Set achievements for User after success registration and create the profile instance"""
     if created:
         with transaction.atomic():
             if instance.is_org:

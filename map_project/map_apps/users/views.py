@@ -3,9 +3,10 @@ from rest_framework import generics, parsers, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from ..achievements.services.achievement_progress_updater import \
+    AchievementProgressController
 from .models import CreatorSubscriptions, UserProfile
 from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
-from ..achievements.services.achievement_progress_updater import AchievementProgressController
 
 # Create your views here.
 

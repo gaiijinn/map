@@ -1,9 +1,7 @@
-from django.db.models import F
 from django.contrib.auth import get_user_model
-from ..models import Achievements, AchievementsProgressStatus
 from django.core.exceptions import ObjectDoesNotExist
 
-from abc import ABC, abstractmethod
+from ..models import Achievements, AchievementsProgressStatus
 
 
 class NoneReturner:
@@ -32,9 +30,9 @@ class AchievementProgressController:
     It retrieves the achievement and user objects using the provided IDs, and then increments
     the progress of the achievement for the user.
 
-    This class is intended to be used within controllers to handle the update logic
-    for achievement progress. After successful updating, a post-save signal will be triggered on
-    AchievementProgressStatus model, which then invoke a task for changing the boolean field and level calculating.
+    This class is intended to be used within controllers to handle the update logic for achievement progress. After
+    successful updating, a post-save signal will be triggered on AchievementProgressStatus model, which then invoke a
+    task for changing the boolean model field and level calculating.
     """
 
     def __init__(self, achievements_id, users_id):
@@ -57,5 +55,8 @@ class AchievementProgressController:
                 achievement=achievement
             )
 
-            obj.progress_rn += 1
-            obj.save()
+            if not obj.is_achieved:
+                obj.progress_rn += 1
+                obj.save()
+
+                # post_save signal is triggered (in achievements signals)
