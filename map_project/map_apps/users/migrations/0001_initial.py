@@ -5,11 +5,10 @@ import uuid
 import django.core.validators
 import django.db.models.deletion
 import django.utils.timezone
+import map_apps.users.models
 import simple_history.models
 from django.conf import settings
 from django.db import migrations, models
-
-import map_apps.users.models
 
 
 class Migration(migrations.Migration):

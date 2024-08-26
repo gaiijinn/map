@@ -1,7 +1,6 @@
 from typing import Type
 
 from django.db.models import Sum
-
 from map_apps.achievements.models import AchievementsProgressStatus
 
 from ..models import UserLevel, UserProfile
