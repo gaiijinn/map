@@ -1,4 +1,4 @@
-from .achievement_abc import BaseIsAchievedUpdater, BaseProgressUpdater
+from .achievement_status_updater_abc import BaseIsAchievedUpdater, BaseProgressUpdater
 
 from map_apps.users.service.level_calculating_service import \
     UserLevelCalculating

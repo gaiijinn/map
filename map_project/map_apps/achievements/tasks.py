@@ -1,7 +1,7 @@
 from celery import shared_task
 
 from .models import AchievementsProgressStatus
-from .services.achievement_service import AchievementController
+from .services.achievement_status_updater import AchievementController
 
 
 @shared_task

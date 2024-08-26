@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from .models import CreatorSubscriptions, UserProfile
 from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
+from ..achievements.services.achievement_progress_updater import AchievementProgressController
 
 # Create your views here.
 
@@ -17,6 +18,11 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
 
     def get_object(self):
         return self.queryset.get(user=self.request.user)
+
+    def patch(self, request, *args, **kwargs):
+        achievement_update = AchievementProgressController(achievements_id=3, users_id=self.get_object().id)
+        achievement_update.progress_updater()
+        return super().update(request, *args, **kwargs)
 
 
 class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
