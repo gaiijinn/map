@@ -1,32 +1,20 @@
-from functools import wraps
-
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 
 from ..models import Achievements, AchievementsProgressStatus
-from .abc_module.progress_updater_abc import (BaseAchievementGetter,
-                                              BaseUserGetter)
-
-
-def handle_no_object(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ObjectDoesNotExist:
-            return None
-    return wrapper
+from .abc_modules.progress_updater_abc import (BaseAchievementGetter,
+                                               BaseUserGetter)
+from .decorators.decorators import handle_no_object
 
 
 class AchievementGetter(BaseAchievementGetter):
     @handle_no_object
-    def get_achievement(self, achievement_id, model_class=Achievements):
+    def get_achievement(self, achievement_id, model_class=Achievements) -> object:
         return model_class.objects.get(id=achievement_id)
 
 
 class UserGetter(BaseUserGetter):
     @handle_no_object
-    def get_user(self, users_id):
+    def get_user(self, users_id) -> object:
         return get_user_model().objects.get(id=users_id)
 
 
@@ -49,13 +37,13 @@ class AchievementProgressController:
         self.achievement_getter = achievement_getter()
         self.user_getter = user_getter()
 
-    def achievement_obj_builder(self):
+    def achievement_obj_builder(self) -> object:
         return self.achievement_getter.get_achievement(self.achievements_id)
 
-    def user_obj_builder(self):
+    def user_obj_builder(self) -> object:
         return self.user_getter.get_user(self.users_id)
 
-    def progress_updater(self):
+    def progress_updater(self) -> None:
         achievement = self.achievement_obj_builder()
         user = self.user_obj_builder()
 

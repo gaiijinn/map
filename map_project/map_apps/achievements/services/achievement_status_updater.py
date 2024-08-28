@@ -2,7 +2,7 @@ from map_apps.users.service.level_calculating_service import \
     UserLevelCalculating
 
 from ..models import AchievementsProgressStatus
-from ..services.abc_module.status_updater_abc import BaseIsAchievedUpdater
+from ..services.abc_modules.status_updater_abc import BaseIsAchievedUpdater
 
 
 class IsAchievedUpdater(BaseIsAchievedUpdater):
@@ -54,7 +54,7 @@ class AchievementController:
         self.is_achieved_updater = is_achieved_updater(self.obj)
         self.user_level_calculating = user_level_calculating(self.obj.user)
 
-    def achievement_status_processing(self):
+    def achievement_status_processing(self) -> None:
         achievement_status_updater = AchievementStatusUpdater(
             self.obj, self.is_achieved_updater
         )
