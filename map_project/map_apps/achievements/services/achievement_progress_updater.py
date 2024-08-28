@@ -1,31 +1,38 @@
+from functools import wraps
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from ..models import Achievements, AchievementsProgressStatus
+from .abc_module.progress_updater_abc import (BaseAchievementGetter,
+                                              BaseUserGetter)
 
 
-class NoneReturner:
-    def get_object_or_none(self, model_class, **kwargs):
+def handle_no_object(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
         try:
-            return model_class.objects.get(**kwargs)
+            return func(*args, **kwargs)
         except ObjectDoesNotExist:
             return None
+    return wrapper
 
 
-class AchievementGetter(NoneReturner):
-    def get_achievement(self, achievement_id):
-        return super().get_object_or_none(Achievements, id=achievement_id)
+class AchievementGetter(BaseAchievementGetter):
+    @handle_no_object
+    def get_achievement(self, achievement_id, model_class=Achievements):
+        return model_class.objects.get(id=achievement_id)
 
 
-class UserGetter(NoneReturner):
+class UserGetter(BaseUserGetter):
+    @handle_no_object
     def get_user(self, users_id):
-        return super().get_object_or_none(get_user_model(), id=users_id)
+        return get_user_model().objects.get(id=users_id)
 
 
 class AchievementProgressController:
     """
     Service for updating the progress of achievements for users.
-
     This class is responsible for updating the progress of a specific achievement for a user.
     It retrieves the achievement and user objects using the provided IDs, and then increments
     the progress of the achievement for the user.
@@ -35,15 +42,18 @@ class AchievementProgressController:
     task for changing the boolean model field and level calculating.
     """
 
-    def __init__(self, achievements_id, users_id):
+    def __init__(self, achievements_id, users_id, achievement_getter=AchievementGetter, user_getter=UserGetter):
         self.achievements_id = achievements_id
         self.users_id = users_id
 
+        self.achievement_getter = achievement_getter()
+        self.user_getter = user_getter()
+
     def achievement_obj_builder(self):
-        return AchievementGetter().get_achievement(self.achievements_id)
+        return self.achievement_getter.get_achievement(self.achievements_id)
 
     def user_obj_builder(self):
-        return UserGetter().get_user(self.users_id)
+        return self.user_getter.get_user(self.users_id)
 
     def progress_updater(self):
         achievement = self.achievement_obj_builder()

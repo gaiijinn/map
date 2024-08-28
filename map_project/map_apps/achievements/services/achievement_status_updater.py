@@ -2,8 +2,7 @@ from map_apps.users.service.level_calculating_service import \
     UserLevelCalculating
 
 from ..models import AchievementsProgressStatus
-from .achievement_status_updater_abc import (BaseIsAchievedUpdater,
-                                             BaseProgressUpdater)
+from ..services.abc_module.status_updater_abc import BaseIsAchievedUpdater
 
 
 class IsAchievedUpdater(BaseIsAchievedUpdater):
@@ -62,7 +61,7 @@ class AchievementController:
 
         if achievement_status_updater.update_achievement_status():
             """
-            If achievement field 'is_achieved' was changed we must to recalculate the user level, so there we 
+            If achievement field 'is_achieved' was changed we must recalculate the user level, so there we 
             start level calculating by using the users.service.level_calculating_service
             """
             user_level_calculating = UserLevelCalculating(self.obj.user)
