@@ -17,7 +17,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -88,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "map.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -101,7 +99,6 @@ DATABASES = {
         "HOST": os.environ.get("DB_HOST"),
     },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -120,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -165,7 +161,6 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
-
 # Redis
 
 REDIS_HOST = os.environ.get("REDIS_HOST")
@@ -184,7 +179,6 @@ CACHES = {
 
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}"
-
 CELERY_TASK_ALWAYS_EAGER = True
 
 # Email
@@ -242,3 +236,38 @@ DJOSER = {
         "user_create": "map_apps.users.serializers.CustomCreateUserSerializer",
     },
 }
+
+# Loging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "main_format": {
+            "format": "[{asctime} - {levelname} - {message} - {filename}]",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "formatter": "main_format",
+            "filename": "logs.log",
+            "level": "WARNING",
+        }
+    },
+    "loggers": {
+        "main": {
+            "handlers": ["file"],
+            "level": "WARNING",
+            "propagate": True,
+        }
+    },
+}
+
+import sys
+
+if "test" in sys.argv:
+    # Disable all log handlers when running tests
+    LOGGING["handlers"] = {}
+    LOGGING["loggers"] = {}

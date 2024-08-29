@@ -21,7 +21,9 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
         return self.queryset.get(user=self.request.user)
 
     def patch(self, request, *args, **kwargs):
-        achievement_update = AchievementProgressController(achievements_id=3, users_id=self.get_object().id)
+        achievement_update = AchievementProgressController(
+            achievement_id=3, user_id=self.get_object().id
+        )
         achievement_update.progress_updater()
         return super().update(request, *args, **kwargs)
 

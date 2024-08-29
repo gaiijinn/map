@@ -9,6 +9,7 @@ class IsAchievedUpdater(BaseIsAchievedUpdater):
     """
     This class is responsible to set the 'is_achieved' flag.
     """
+
     def __init__(self, achievement_obj):
         self.obj = achievement_obj
 
@@ -21,6 +22,7 @@ class AchievementStatusUpdater:
     """
     This class is responsible for tracking the new/old model field - 'is_achieved', from AchievementProgressStatus.
     """
+
     def __init__(self, achievement_obj, is_achieved_updater):
         self.obj = achievement_obj
         self.is_achieved_updater = is_achieved_updater
@@ -48,8 +50,13 @@ class AchievementController:
     The achievement_status_processing method updates the achievement status, and if the status changes,
     it triggers the user's level recalculation.
     """
-    def __init__(self, achievement_obj, is_achieved_updater=IsAchievedUpdater,
-                 user_level_calculating=UserLevelCalculating):
+
+    def __init__(
+        self,
+        achievement_obj,
+        is_achieved_updater=IsAchievedUpdater,
+        user_level_calculating=UserLevelCalculating,
+    ):
         self.obj = achievement_obj
         self.is_achieved_updater = is_achieved_updater(self.obj)
         self.user_level_calculating = user_level_calculating(self.obj.user)
@@ -61,7 +68,7 @@ class AchievementController:
 
         if achievement_status_updater.update_achievement_status():
             """
-            If achievement field 'is_achieved' was changed we must recalculate the user level, so there we 
+            If achievement field 'is_achieved' was changed we must recalculate the user level, so there we
             start level calculating by using the users.service.level_calculating_service
             """
             user_level_calculating = UserLevelCalculating(self.obj.user)

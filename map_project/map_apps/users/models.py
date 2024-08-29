@@ -101,8 +101,6 @@ class User(AbstractUser):
 
 
 class CreatorSubscriptions(models.Model):
-    """Default user can subscribe on creators(for free only on organizations)"""
-
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="creatorsubscriptions"
     )

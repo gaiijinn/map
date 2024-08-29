@@ -11,6 +11,7 @@ class UserLevelFinder(BaseLevelFinder):
     """
     This class is responsible for finding the level depending on sum of total achieved achievements (total_exp)
     """
+
     def get_last_level(self) -> object:
         last_lvl = UserLevel.objects.last()
         return last_lvl
@@ -27,12 +28,13 @@ class ExperienceCalculator(BaseExperienceCalculator):
     """
     This class is just a calculater, to get the (total_exp), depends on achieved user's achievements.
     """
+
     def get_total_exp(self, user: object) -> int:
         total_exp = (
-                AchievementsProgressStatus.objects.select_related("achievement")
-                .filter(user=user, is_achieved=True)
-                .aggregate(total_exp=Sum("achievement__given_exp"))["total_exp"]
-                or 0
+            AchievementsProgressStatus.objects.select_related("achievement")
+            .filter(user=user, is_achieved=True)
+            .aggregate(total_exp=Sum("achievement__given_exp"))["total_exp"]
+            or 0
         )
         return total_exp
 
@@ -41,10 +43,13 @@ class UserLevelCalculating:
     """
     This class is responsible for calculating and updating a user's level based on their total experience points.
     """
-    def __init__(self,
-                 user: object,
-                 level_finder: Type[BaseLevelFinder] = UserLevelFinder,
-                 experience_calculator: Type[BaseExperienceCalculator] = ExperienceCalculator):
+
+    def __init__(
+        self,
+        user: object,
+        level_finder: Type[BaseLevelFinder] = UserLevelFinder,
+        experience_calculator: Type[BaseExperienceCalculator] = ExperienceCalculator,
+    ):
 
         self.user = user
         self.level_finder = level_finder()

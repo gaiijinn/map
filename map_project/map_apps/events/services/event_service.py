@@ -7,6 +7,7 @@ class TimeProvider:
     """
     Just getting our server timezone
     """
+
     def get_local_time(self):
         return timezone.localtime(timezone.now())
 
@@ -16,6 +17,7 @@ class EventList:
     This class is responsible to return the filtered event depends on local time and day, also init takes
     two important arguments. 'result_revue' is the Event model field, it shows if event was moderated successfully.
     """
+
     def __init__(self, result_revue="approved", exclude="ended"):
         self.result_revue = result_revue
         self.exclude = exclude
@@ -38,6 +40,7 @@ class EventUpdater:
     end time has passed, or to "in_process" if it is still ongoing. Saves the updated event status
     to the database.
     """
+
     def __init__(self, event_list: object, time_provider: object):
         self.event_list = event_list
         self.time_provider = time_provider

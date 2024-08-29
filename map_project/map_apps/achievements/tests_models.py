@@ -1,16 +1,14 @@
-import time
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APIClient
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
 from ..achievements.tasks import check_achievements_status
 from ..users.models import UserLevel
 
 # Create your tests here.
+
+PATCH_USER_PROFILE = reverse("users:user-profile-update-v1")
 
 
 def creating_level(**params):
@@ -49,7 +47,7 @@ def creating_base_achievement(**params):
     return Achievements.objects.create(**defaults)
 
 
-class ModelAchievementsStatusTest(TestCase):
+class ModelAchievementsTest(TestCase):
     def setUp(self) -> None:
         self.first_lvl = creating_level()
 
@@ -68,6 +66,7 @@ class ModelAchievementsStatusTest(TestCase):
 
     def test_manipulate_after_creating(self):
         self.assertEquals(self.user.user_profile.user_level, self.first_lvl)
+        self.assertEqual(self.user.achievementsprogressstatus.count(), 1)
 
     def test_success_update_user_level(self):
         """
@@ -103,8 +102,5 @@ class ModelAchievementsStatusTest(TestCase):
 
     def test_deleting_achievement(self):
         achievement = Achievements.objects.first().delete()
-        all_achievements = AchievementsProgressStatus.objects.filter(user=self.user)
 
-        self.assertEqual(
-            self.user.achievementsprogressstatus.all().count(), all_achievements.count()
-        )
+        self.assertEqual(self.user.achievementsprogressstatus.all().count(), 0)
