@@ -8,8 +8,6 @@ from ..users.models import UserLevel
 
 # Create your tests here.
 
-PATCH_USER_PROFILE = reverse("users:user-profile-update-v1")
-
 
 def creating_level(**params):
     defaults = {"level_name": "Новачок", "low_range": 0, "top_range": 10}
@@ -102,5 +100,4 @@ class ModelAchievementsTest(TestCase):
 
     def test_deleting_achievement(self):
         achievement = Achievements.objects.first().delete()
-
         self.assertEqual(self.user.achievementsprogressstatus.all().count(), 0)

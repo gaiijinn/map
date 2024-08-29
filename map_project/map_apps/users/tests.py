@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +10,6 @@ from ..achievements.models import Achievements, AchievementsProgressStatus
 from .models import User, UserLevel, UserProfile
 from .serializers import UserProfileSerializer
 
-ACHIEVEMENT_STATUS_URL = reverse("achievements:achievement-status-v1")
 USER_UPDATE = reverse("users:user-profile-update-v1")
 
 
@@ -111,8 +112,9 @@ class PrivateUserAPITest(TestCase):
             },
         }
 
-        request = self.client.patch(USER_UPDATE, payload, format="json")
-        self.assertEqual(request.status_code, status.HTTP_200_OK)
+        response = self.client.patch(USER_UPDATE, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.user.user_profile.refresh_from_db()
         self.user.refresh_from_db()

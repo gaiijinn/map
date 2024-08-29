@@ -52,7 +52,7 @@ class BaseUserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = BaseUserProfileSerializer()
+    user = BaseUserProfileSerializer(required=False, partial=True)
     user_level = UserLevelSerializer(read_only=True)
 
     class Meta:

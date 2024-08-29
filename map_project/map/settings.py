@@ -244,7 +244,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "main_format": {
-            "format": "[{asctime} - {levelname} - {message} - {filename}]",
+            "format": "[{asctime} - {levelname} - {name} - {filename} - {module} - {funcName}] {message}",
             "style": "{",
         },
     },
@@ -252,15 +252,15 @@ LOGGING = {
         "file": {
             "class": "logging.FileHandler",
             "formatter": "main_format",
-            "filename": "logs.log",
+            "filename": "logs/achievement_app.log",
             "level": "WARNING",
         }
     },
     "loggers": {
-        "main": {
+        "achievements": {
             "handlers": ["file"],
-            "level": "WARNING",
-            "propagate": True,
+            "level": "DEBUG",
+            "propagate": False,
         }
     },
 }

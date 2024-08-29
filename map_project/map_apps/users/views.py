@@ -1,10 +1,11 @@
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from rest_framework import generics, parsers, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from ..achievements.services.achievement_progress_updater import \
-    AchievementProgressController
+from ..achievements.models import AchievementsProgressStatus
+from ..achievements.services.decorators.decorators import handle_msg_log_404
 from .models import CreatorSubscriptions, UserProfile
 from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
 
@@ -21,11 +22,14 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
         return self.queryset.get(user=self.request.user)
 
     def patch(self, request, *args, **kwargs):
-        achievement_update = AchievementProgressController(
-            achievement_id=3, user_id=self.get_object().id
-        )
-        achievement_update.progress_updater()
+        #self.achievement_manipualtion(achievement_id=3)
         return super().update(request, *args, **kwargs)
+
+    @handle_msg_log_404()
+    def achievement_manipualtion(self, achievement_id):
+        achiev_obj = get_object_or_404(AchievementsProgressStatus, user=self.request.user, achievement__id=achievement_id)
+        achiev_obj.progress_rn += 1
+        achiev_obj.save()
 
 
 class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
