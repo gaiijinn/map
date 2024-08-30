@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest import mock
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
+from ..users.views import UserProfileRetrieveUpdateDestroyAPIView
 from .models import User, UserLevel, UserProfile
 from .serializers import UserProfileSerializer
 
@@ -104,7 +105,8 @@ class PrivateUserAPITest(TestCase):
 
         self.assertEqual(response_data, serializer.data)
 
-    def test_user_retrieve_success(self):
+    @mock.patch.object(UserProfileRetrieveUpdateDestroyAPIView, 'achievement_manipualtion', return_value=None)
+    def test_user_retrieve_success(self, mock_achievement_manipualtion):
         payload = {
             "about_me": "123g45",
             "user": {
@@ -123,7 +125,8 @@ class PrivateUserAPITest(TestCase):
         self.assertEqual(self.user.last_name, payload["user"]["last_name"])
         self.assertEqual(self.user.first_name, self.payload["first_name"])
 
-    def test_user_retrieve_failed(self):
+    @mock.patch.object(UserProfileRetrieveUpdateDestroyAPIView, 'achievement_manipualtion', return_value=None)
+    def test_user_retrieve_failed(self, mock_achievement_manipualtion):
         payload = {
             "user": {
                 "email": "somenew@example.com",

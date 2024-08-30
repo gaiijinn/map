@@ -7,8 +7,6 @@ from rest_framework.test import APIClient
 from ..achievements.models import Achievements, AchievementsProgressStatus
 from ..users.models import UserLevel
 
-PATCH_USER_PROFILE = reverse("users:user-profile-update-v1")
-
 
 def creating_level(**params):
     defaults = {"level_name": "Новачок", "low_range": 0, "top_range": 10}

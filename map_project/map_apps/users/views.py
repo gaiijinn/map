@@ -22,7 +22,7 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
         return self.queryset.get(user=self.request.user)
 
     def patch(self, request, *args, **kwargs):
-        #self.achievement_manipualtion(achievement_id=3)
+        self.achievement_manipualtion(achievement_id=3)
         return super().update(request, *args, **kwargs)
 
     @handle_msg_log_404()
