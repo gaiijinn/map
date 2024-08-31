@@ -11,3 +11,9 @@ def progress_updater(achievement_keyword, user_id):
     if not achiev_obj.is_achieved:
         achiev_obj.progress_rn += 1
         achiev_obj.save()
+
+
+def progress_updater_v2(achievement_obj):
+    if not achievement_obj.is_achieved:
+        achievement_obj.progress_rn += 1
+        achievement_obj.save()
