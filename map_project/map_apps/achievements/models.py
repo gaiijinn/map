@@ -9,7 +9,14 @@ from ..users.models import User
 class Achievements(models.Model):
     """Models to save the achievements"""
 
+    ACHIEVEMENT_KEYWORD = (
+        ('DV', 'default_value'),
+        ('UP', 'update_profile'),
+        ('CE', 'create_event'),
+    )
+
     achievement_name = models.CharField(max_length=128)
+    keyword = models.CharField(choices=ACHIEVEMENT_KEYWORD, max_length=128, default='DV')
     descr_achievement = models.CharField(max_length=256, blank=True)
     given_exp = models.PositiveSmallIntegerField(
         default=0, validators=[MinValueValidator(0)]
@@ -46,3 +53,8 @@ class AchievementsProgressStatus(models.Model):
             f"{self.user.get_full_name()} | {self.achievement.achievement_name} | Виконано = {self.is_achieved}, "
             f"{self.progress_rn}/{self.achievement.final_value}"
         )
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.progress_rn > self.achievement.final_value:
+            self.progress_rn = self.achievement.final_value
+        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)

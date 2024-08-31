@@ -5,9 +5,9 @@ from .decorators.decorators import handle_msg_log_404
 
 
 @handle_msg_log_404()
-def progress_updater(achievement_id, user_id):
+def progress_updater(achievement_keyword, user_id):
     achiev_obj = get_object_or_404(AchievementsProgressStatus, user__id=user_id,
-                                   achievement__id=achievement_id)
+                                   achievement__keyword=achievement_keyword)
     if not achiev_obj.is_achieved:
         achiev_obj.progress_rn += 1
         achiev_obj.save()

@@ -18,11 +18,11 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
     queryset = UserProfile.objects.all().select_related("user", "user_level")
     permission_classes = (IsAuthenticated,)
     parser_classes = (parsers.MultiPartParser, parsers.JSONParser)
-
+        
     def get_object(self):
         return self.queryset.get(user=self.request.user)
 
-    @handler_success_request_for_achievement_update(achievement_id=3, update_func=progress_updater)
+    @handler_success_request_for_achievement_update(achievement_keyword='UP', update_func=progress_updater)
     def patch(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 

@@ -29,4 +29,5 @@ def set_new_achievement(sender, instance, created, **kwargs):
 def check_status(sender, instance, created, **kwargs):
     """From here we check the achievement status and set the actual user level"""
     if not created:
-        check_achievements_status.delay(instance.id)
+        with transaction.atomic():
+            check_achievements_status.delay(instance.id)

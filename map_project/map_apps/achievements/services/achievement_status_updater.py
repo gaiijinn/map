@@ -71,5 +71,6 @@ class AchievementController:
             If achievement field 'is_achieved' was changed we must recalculate the user level, so there we
             start level calculating by using the users.service.level_calculating_service
             """
+
             user_level_calculating = UserLevelCalculating(self.obj.user)
             user_level_calculating.level_updater()
