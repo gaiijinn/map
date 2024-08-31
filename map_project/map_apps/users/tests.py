@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from ..users.views import UserProfileRetrieveUpdateDestroyAPIView
 from .models import User, UserLevel, UserProfile
 from .serializers import UserProfileSerializer
 
@@ -105,8 +104,8 @@ class PrivateUserAPITest(TestCase):
 
         self.assertEqual(response_data, serializer.data)
 
-    @mock.patch.object(UserProfileRetrieveUpdateDestroyAPIView, 'achievement_manipualtion', return_value=None)
-    def test_user_retrieve_success(self, mock_achievement_manipualtion):
+    @mock.patch('map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    def test_user_retrieve_success(self):
         payload = {
             "about_me": "123g45",
             "user": {
@@ -125,8 +124,8 @@ class PrivateUserAPITest(TestCase):
         self.assertEqual(self.user.last_name, payload["user"]["last_name"])
         self.assertEqual(self.user.first_name, self.payload["first_name"])
 
-    @mock.patch.object(UserProfileRetrieveUpdateDestroyAPIView, 'achievement_manipualtion', return_value=None)
-    def test_user_retrieve_failed(self, mock_achievement_manipualtion):
+    @mock.patch('map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    def test_user_retrieve_failed(self):
         payload = {
             "user": {
                 "email": "somenew@example.com",

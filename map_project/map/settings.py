@@ -247,19 +247,34 @@ LOGGING = {
             "format": "[{asctime} - {levelname} - {name} - {filename} - {module} - {funcName}] {message}",
             "style": "{",
         },
+        "info_format": {
+            "format": "[{asctime} - {name} - {filename} - {module} - {funcName}] {message}",
+            "style": "{",
+        },
     },
     "handlers": {
-        "file": {
+        "achievement_warning": {
             "class": "logging.FileHandler",
             "formatter": "main_format",
             "filename": "logs/achievement_app.log",
             "level": "WARNING",
+        },
+        "achievement_info": {
+            "class": "logging.FileHandler",
+            "formatter": "main_format",
+            "filename": "logs/achievement_app_info.log",
+            "level": "INFO",
         }
     },
     "loggers": {
-        "achievements": {
-            "handlers": ["file"],
-            "level": "DEBUG",
+        "achievement_warning": {
+            "handlers": ["achievement_warning"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "achievement_info": {
+            "handlers": ["achievement_info"],
+            "level": "INFO",
             "propagate": False,
         }
     },

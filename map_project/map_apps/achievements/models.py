@@ -46,8 +46,3 @@ class AchievementsProgressStatus(models.Model):
             f"{self.user.get_full_name()} | {self.achievement.achievement_name} | Виконано = {self.is_achieved}, "
             f"{self.progress_rn}/{self.achievement.final_value}"
         )
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.is_achieved and self.progress_rn > self.achievement.final_value:
-            self.progress_rn = self.achievement.final_value
-        return super().save(force_insert=False, force_update=False, using=None, update_fields=None)
