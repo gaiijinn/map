@@ -1,9 +1,9 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 
-from .models import CreatorSubscriptions, User, UserLevel, UserProfile
+from .models import User, UserLevel, UserProfile, UserSubscription
 
 admin.site.register(User)
 admin.site.register(UserLevel)
+admin.site.register(UserSubscription)
 admin.site.register(UserProfile, SimpleHistoryAdmin)
-admin.site.register(CreatorSubscriptions)

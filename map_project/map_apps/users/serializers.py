@@ -1,8 +1,9 @@
+from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 
-from .models import CreatorSubscriptions, User, UserLevel, UserProfile
+from .models import User, UserLevel, UserProfile, UserSubscription
 
 
 class CustomCreateUserSerializer(UserCreateSerializer):
@@ -39,10 +40,12 @@ class UserLevelSerializer(serializers.ModelSerializer):
 class BaseUserProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     rating = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=True, required=False)
 
     class Meta:
         model = User
         fields = (
+            "id",
             "first_name",
             "last_name",
             "email",
@@ -72,22 +75,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class CreatorSubscriptionsSerializer(serializers.ModelSerializer):
-    """Непонятно еще какие данные нужны будут"""
-
-    creator = BaseUserProfileSerializer(read_only=True)
-    # creator_about_me = serializers.SerializerMethodField()
+class UserSubscriptionSerializer(serializers.ModelSerializer):
+    subscribe_to = BaseUserProfileSerializer(read_only=True)
 
     class Meta:
-        model = CreatorSubscriptions
-        fields = ("id", "creator")
+        model = UserSubscription
+        fields = ('id', 'subscribe_to', 'subscribe_at')
 
-    def get_creator_about_me(self, obj):
-        creator_user_profile = obj.creator.user_profile
-        serializer = UserProfileSerializer(creator_user_profile)
-        data = serializer.data
 
-        if "user" in data:
-            del data["user"]
+class UserSubscriptionCreationSerializer(serializers.ModelSerializer):
+    subscribe_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
-        return data
+    class Meta:
+        model = UserSubscription
+        fields = ('subscribe_to', )
+
+    def create(self, validated_data):
+        request_user = self.context['request'].user
+        user_to_subscribe = validated_data.get('subscribe_to')
+
+        return UserSubscription.objects.create(
+            user=request_user,
+            subscribe_to=user_to_subscribe
+        )

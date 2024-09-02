@@ -65,3 +65,5 @@ class UserLevelCalculating:
             Updates the user's level only if a level is found and the user is not already at the last level.
             """
             UserProfile.objects.filter(user=self.user).update(user_level=user_level)
+
+            return True

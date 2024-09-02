@@ -1,14 +1,9 @@
-import uuid
-
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from simple_history.models import HistoricalRecords
-
-from .tasks import level_calculating
 
 # Create your models here.
 
@@ -77,6 +72,14 @@ class User(AbstractUser):
     )
     rating = models.PositiveSmallIntegerField(_("Рейтинг"), default=0, blank=True)
 
+    subscriptions = models.ManyToManyField(
+        to='self',
+        through='UserSubscription',
+        symmetrical=False,
+        related_name='subscribed_to',
+        blank=True,
+    )
+
     profile_picture = models.ImageField(
         _("Фото користувача"),
         upload_to="users/profile_picture/",
@@ -100,15 +103,6 @@ class User(AbstractUser):
         verbose_name_plural = "Користувачі"
 
 
-class CreatorSubscriptions(models.Model):
-    creator = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="creatorsubscriptions"
-    )
-    subscriber = models.ForeignKey(
-        "UserProfile", on_delete=models.CASCADE, related_name="creatorsubscriptions"
-    )
-
-
 class UserProfile(models.Model):
     """Models to save the user additional info"""
 
@@ -130,8 +124,24 @@ class UserProfile(models.Model):
         _("Instagram посилання"), max_length=256, blank=True, null=True
     )
     want_newsletters = models.BooleanField(_("Згоден отримувати новини"), default=False)
-    subscriptions = models.ManyToManyField(User, through=CreatorSubscriptions)
     history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.user.get_full_name()} | {self.user_level}"
+
+
+class UserSubscription(models.Model):
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions_made'
+    )
+    subscribe_to = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions_received'
+    )
+    subscribe_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'subscribe_to')

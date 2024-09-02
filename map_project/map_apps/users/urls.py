@@ -1,14 +1,14 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (CreatorSubscriptionsModelViewSet, UserCreationPage,
-                    UserLoginPage, UserProfilePage,
-                    UserProfileRetrieveUpdateDestroyAPIView)
+from .views import (UserCreationPage, UserLoginPage, UserProfilePage,
+                    UserProfileRetrieveUpdateDestroyAPIView,
+                    UserSubscriptionsModelViewSet)
 
 app_name = "users"
 
 router = DefaultRouter()
-router.register("subscriptions", CreatorSubscriptionsModelViewSet)
+router.register('subscriptions', UserSubscriptionsModelViewSet)
 
 urlpatterns = [
     path(

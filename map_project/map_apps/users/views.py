@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
-from rest_framework import generics, parsers, status, viewsets
+from rest_framework import generics, mixins, parsers, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -7,8 +7,10 @@ from ..achievements.services.achievement_progress_updater import \
     progress_updater
 from ..achievements.services.decorators.decorators import \
     handler_success_request_for_achievement_update
-from .models import CreatorSubscriptions, UserProfile
-from .serializers import CreatorSubscriptionsSerializer, UserProfileSerializer
+from .models import User, UserProfile, UserSubscription
+from .serializers import (UserProfileSerializer,
+                          UserSubscriptionCreationSerializer,
+                          UserSubscriptionSerializer)
 
 # Create your views here.
 
@@ -27,18 +29,22 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
         return super().update(request, *args, **kwargs)
 
 
-class CreatorSubscriptionsModelViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    queryset = CreatorSubscriptions.objects.all()
-    serializer_class = CreatorSubscriptionsSerializer
+class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
+                                    mixins.RetrieveModelMixin,
+                                    mixins.DestroyModelMixin,
+                                    mixins.CreateModelMixin,
+                                    viewsets.GenericViewSet):
+    serializer_class = UserSubscriptionSerializer
+    queryset = UserSubscription.objects.all()
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        return self.queryset.filter(
-            subscriber=self.request.user.user_profile
-        ).select_related("creator", "creator__user_profile")
+        return self.queryset.filter(user=self.request.user).order_by('-subscribe_at')
 
-    def perform_create(self, serializer):
-        serializer.save(subscriber=self.request.user.user_profile)
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserSubscriptionCreationSerializer
+        return self.serializer_class
 
 
 class UserProfilePage(TemplateView):

@@ -1,5 +1,5 @@
 services:
-  web-app:
+  web_app:
     build:
       context: .
     ports:
