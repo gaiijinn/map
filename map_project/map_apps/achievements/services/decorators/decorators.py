@@ -30,7 +30,7 @@ def handler_success_request_for_achievement_update(achievement_keyword=None, upd
         @wraps(func)
         def wrapper(self, request, *args, **kwargs):
             response = func(self, request, *args, **kwargs)
-            if response.status_code == status.HTTP_200_OK and achievement_keyword is not None and update_func:
+            if response.status_code in [status.HTTP_200_OK, status.HTTP_201_CREATED] and achievement_keyword is not None and update_func:
                 update_func(user_id=request.user.id, achievement_keyword=achievement_keyword)
             return response
         return wrapper

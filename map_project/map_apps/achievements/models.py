@@ -13,6 +13,7 @@ class Achievements(models.Model):
         ('DV', 'default_value'),
         ('UP', 'update_profile'),
         ('CE', 'create_event'),
+        ('CS', 'create_subscription'),
     )
 
     achievement_name = models.CharField(max_length=128)

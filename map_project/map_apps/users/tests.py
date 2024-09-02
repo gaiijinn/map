@@ -7,10 +7,15 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
-from .models import User, UserLevel, UserProfile
+from .models import User, UserLevel, UserProfile, UserSubscription
 from .serializers import UserProfileSerializer
 
 USER_UPDATE = reverse("users:user-profile-update-v1")
+SUBSCRIPTION_URL = reverse("users:usersubscription-list")
+
+
+def subscription_detail(subs_id):
+    return reverse("users:subscriptions-detail", args=[subs_id])
 
 
 def user_creating(**params):
@@ -104,7 +109,8 @@ class PrivateUserAPITest(TestCase):
 
         self.assertEqual(response_data, serializer.data)
 
-    @mock.patch('map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    @mock.patch(
+        'map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
     def test_user_retrieve_success(self):
         payload = {
             "about_me": "123g45",
@@ -124,7 +130,8 @@ class PrivateUserAPITest(TestCase):
         self.assertEqual(self.user.last_name, payload["user"]["last_name"])
         self.assertEqual(self.user.first_name, self.payload["first_name"])
 
-    @mock.patch('map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    @mock.patch(
+        'map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
     def test_user_retrieve_failed(self):
         payload = {
             "user": {
@@ -146,3 +153,31 @@ class PrivateUserAPITest(TestCase):
     def test_user_deleting(self):
         request = self.client.delete(USER_UPDATE)
         self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
+
+    @mock.patch(
+        'map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    def test_subscription_to_user(self):
+        new_user = user_creating(email='test2@example.com')
+
+        payload = {
+            'subscribe_to': new_user.id
+        }
+
+        request = self.client.post(SUBSCRIPTION_URL, payload)
+        self.assertEqual(request.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(self.user.subscriptions_made.count(), 1)
+
+
+    # def test_subscription_depends_on_user(self):
+    #     new_user = user_creating(email='test2@example.com')
+    #     new_user2 = user_creating(email='test3@example.com')
+    #
+    #     new_user.subscriptions.add(new_user2)
+    #
+    #     payload = {
+    #         'subscribe_to': new_user.id
+    #     }
+    #
+    #     request = self.client.post(SUBSCRIPTION_URL, payload)
+    #     self.assertEqual(request.status_code, status.HTTP_201_CREATED)

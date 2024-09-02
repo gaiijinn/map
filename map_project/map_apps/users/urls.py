@@ -8,7 +8,7 @@ from .views import (UserCreationPage, UserLoginPage, UserProfilePage,
 app_name = "users"
 
 router = DefaultRouter()
-router.register('subscriptions', UserSubscriptionsModelViewSet)
+router.register("subscriptions", UserSubscriptionsModelViewSet)
 
 urlpatterns = [
     path(

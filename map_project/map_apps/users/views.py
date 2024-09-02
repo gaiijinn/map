@@ -46,6 +46,10 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
             return UserSubscriptionCreationSerializer
         return self.serializer_class
 
+    @handler_success_request_for_achievement_update(achievement_keyword='CS', update_func=progress_updater)
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
 
 class UserProfilePage(TemplateView):
     template_name = "user-profile.html"
