@@ -2,8 +2,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import (filters, generics, parsers, permissions, status,
-                            viewsets)
+from rest_framework import (filters, generics, mixins, parsers, permissions,
+                            status, viewsets)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -87,15 +87,17 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class EventGuestCreateAPIView(generics.CreateAPIView):
-    #надо на вьюсет делать)
+class EventGuestCustomViewSet(mixins.ListModelMixin,
+                              mixins.DestroyModelMixin,
+                              mixins.CreateModelMixin,
+                              viewsets.GenericViewSet):
     queryset = EventGuests.objects.all()
     serializer_class = EventGuestSerializer
     permission_classes = (permissions.IsAuthenticated, )
     parser_classes = (parsers.JSONParser, )
 
     def get_queryset(self):
-        return self.queryset.filter(event_status="not_started")
+        return self.queryset.filter(event__event_status="not_started", guest=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(guest=self.request.user)

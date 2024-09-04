@@ -7,8 +7,8 @@ app_name = "events"
 
 router = DefaultRouter()
 router.register("events", views.EventReadOnlyModelViewSet)
+router.register("events-guests", views.EventGuestCustomViewSet)
 
 urlpatterns = [
     path("api/v1/", include(router.urls)),
-    path("api/v1/set-guest-to-event/", views.EventGuestCreateAPIView.as_view(), name='set-guest-to-event')
 ]

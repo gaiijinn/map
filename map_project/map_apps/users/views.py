@@ -9,9 +9,9 @@ from ..achievements.services.achievement_progress_updater import \
 from ..achievements.services.decorators.decorators import \
     handler_success_request_for_achievement_update
 from .models import User, UserProfile, UserSubscription
-from .serializers import (UserProfileSerializer,
-                          UserSubscriptionListSerializer,
-                          UserSubscriptionSerializer)
+from .serializers import (GetUserSubscriberSerializer, UserProfileSerializer,
+                          UserSubscriptionCreatingSerializer,
+                          UserSubscriptionListSerializer)
 
 # Create your views here.
 
@@ -32,8 +32,8 @@ class UserProfileRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIV
 
 class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
                                     mixins.RetrieveModelMixin,
-                                    mixins.DestroyModelMixin,
                                     mixins.CreateModelMixin,
+                                    mixins.DestroyModelMixin,
                                     viewsets.GenericViewSet):
     serializer_class = UserSubscriptionListSerializer
     queryset = UserSubscription.objects.all()
@@ -47,9 +47,7 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return UserSubscriptionSerializer
-        elif self.action == 'delete':
-            return UserSubscriptionSerializer
+            return UserSubscriptionCreatingSerializer
         return self.serializer_class
 
     @handler_success_request_for_achievement_update(achievement_keyword='CS', update_func=progress_updater)
@@ -58,8 +56,10 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
 
     @action(detail=False)
     def get_user_subscribers(self, request):
-        queryset = UserSubscription.objects.filter(subscribe_to=request.user)
-        serializer = self.serializer_class(queryset, many=True)
+        self.serializer_class = GetUserSubscriberSerializer
+
+        subscribers = self.request.user.subscriptions_received.all()
+        serializer = self.serializer_class(subscribers, many=True)
         return Response(serializer.data)
 
 
