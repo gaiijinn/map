@@ -1,3 +1,4 @@
+from functools import wraps
 from unittest import mock
 
 from django.contrib.auth import get_user_model
@@ -12,6 +13,15 @@ from .serializers import UserProfileSerializer
 
 USER_UPDATE = reverse("users:user-profile-update-v1")
 SUBSCRIPTION_URL = reverse("users:usersubscription-list")
+
+
+def mock_decorator(*args, **kwargs):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 
 def subscription_detail(subs_id):
@@ -100,7 +110,7 @@ class PrivateUserAPITest(TestCase):
 
     def test_get_user(self):
         response = self.client.get(USER_UPDATE)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = response.json()
 
@@ -168,16 +178,19 @@ class PrivateUserAPITest(TestCase):
 
         self.assertEqual(self.user.subscriptions_made.count(), 1)
 
+    @mock.patch(
+        'map_apps.achievements.services.decorators.decorators.handler_success_request_for_achievement_update').start()
+    def test_subscription_depends_on_user(self):
+        new_user = user_creating(email='test212@example.com')
 
-    # def test_subscription_depends_on_user(self):
-    #     new_user = user_creating(email='test2@example.com')
-    #     new_user2 = user_creating(email='test3@example.com')
-    #
-    #     new_user.subscriptions.add(new_user2)
-    #
-    #     payload = {
-    #         'subscribe_to': new_user.id
-    #     }
-    #
-    #     request = self.client.post(SUBSCRIPTION_URL, payload)
-    #     self.assertEqual(request.status_code, status.HTTP_201_CREATED)
+        payload = {
+            'subscribe_to': new_user.id
+        }
+
+        request = self.client.post(SUBSCRIPTION_URL, payload)
+        self.assertEqual(request.status_code, status.HTTP_201_CREATED)
+
+        obj = UserSubscription.objects.filter(user=self.user, subscribe_to=new_user)
+        obj2 = UserSubscription.objects.filter(user=new_user, subscribe_to=self.user)
+        self.assertEqual(obj.count(), 1)
+        self.assertEqual(obj2.count(), 0)

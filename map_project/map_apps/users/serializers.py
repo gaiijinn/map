@@ -84,17 +84,6 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
 
 
 class UserSubscriptionCreationSerializer(serializers.ModelSerializer):
-    subscribe_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-
     class Meta:
         model = UserSubscription
         fields = ('subscribe_to', )
-
-    def create(self, validated_data):
-        request_user = self.context['request'].user
-        user_to_subscribe = validated_data.get('subscribe_to')
-
-        return UserSubscription.objects.create(
-            user=request_user,
-            subscribe_to=user_to_subscribe
-        )

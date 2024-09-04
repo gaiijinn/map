@@ -41,6 +41,9 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user).order_by('-subscribe_at')
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def get_serializer_class(self):
         if self.action == 'create':
             return UserSubscriptionCreationSerializer

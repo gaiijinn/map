@@ -145,3 +145,6 @@ class UserSubscription(models.Model):
 
     class Meta:
         unique_together = ('user', 'subscribe_to')
+        indexes = [
+            models.Index(fields=['user', 'subscribe_to'])
+        ]

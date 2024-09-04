@@ -2,12 +2,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, status, viewsets
+from rest_framework import (filters, generics, parsers, permissions, status,
+                            viewsets)
 from rest_framework.response import Response
 
-from .models import Events
+from .models import EventGuests, Events
 from .paginators import CustomEventPageNumberPagination
-from .serializers import EventListSerializer, EventRetrieveSerializer
+from .serializers import (EventGuestSerializer, EventListSerializer,
+                          EventRetrieveSerializer)
 
 # Create your views here.
 
@@ -82,3 +84,16 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     @method_decorator(vary_on_headers("Authorization", "X-Anonymous-User"))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class EventGuestCreateAPIView(generics.CreateAPIView):
+    queryset = EventGuests.objects.all()
+    serializer_class = EventGuestSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+    parser_classes = (parsers.JSONParser, )
+
+    def get_queryset(self):
+        return self.queryset.filter(event_status="not_started")
+
+    def perform_create(self, serializer):
+        serializer.save(guest=self.request.user)

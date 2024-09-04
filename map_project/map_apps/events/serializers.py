@@ -97,3 +97,9 @@ class EventRetrieveSerializer(EventListSerializer):
 
     class Meta(EventListSerializer.Meta):
         fields = EventListSerializer.Meta.fields + ("event_guests", "eventimgs")
+
+
+class EventGuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventGuests
+        fields = ('event', )

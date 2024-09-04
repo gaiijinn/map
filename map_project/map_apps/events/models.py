@@ -21,6 +21,9 @@ class EventGuests(models.Model):
     def __str__(self):
         return f"{self.event.name} | {self.guest.get_full_name()}"
 
+    class Meta:
+        unique_together = ('event', 'guest')
+
 
 class EventReportTypes(models.Model):
     name = models.CharField(max_length=128, unique=True)
