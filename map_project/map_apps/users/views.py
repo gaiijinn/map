@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from rest_framework import generics, mixins, parsers, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -9,7 +10,7 @@ from ..achievements.services.decorators.decorators import \
     handler_success_request_for_achievement_update
 from .models import User, UserProfile, UserSubscription
 from .serializers import (UserProfileSerializer,
-                          UserSubscriptionCreationSerializer,
+                          UserSubscriptionListSerializer,
                           UserSubscriptionSerializer)
 
 # Create your views here.
@@ -34,7 +35,7 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
                                     mixins.DestroyModelMixin,
                                     mixins.CreateModelMixin,
                                     viewsets.GenericViewSet):
-    serializer_class = UserSubscriptionSerializer
+    serializer_class = UserSubscriptionListSerializer
     queryset = UserSubscription.objects.all()
     permission_classes = (IsAuthenticated, )
 
@@ -46,12 +47,20 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return UserSubscriptionCreationSerializer
+            return UserSubscriptionSerializer
+        elif self.action == 'delete':
+            return UserSubscriptionSerializer
         return self.serializer_class
 
     @handler_success_request_for_achievement_update(achievement_keyword='CS', update_func=progress_updater)
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+
+    @action(detail=False)
+    def get_user_subscribers(self, request):
+        queryset = UserSubscription.objects.filter(subscribe_to=request.user)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
 class UserProfilePage(TemplateView):

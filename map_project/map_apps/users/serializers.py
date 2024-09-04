@@ -75,7 +75,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class UserSubscriptionSerializer(serializers.ModelSerializer):
+class UserSubscriptionListSerializer(serializers.ModelSerializer):
     subscribe_to = BaseUserProfileSerializer(read_only=True)
 
     class Meta:
@@ -83,7 +83,7 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         fields = ('id', 'subscribe_to', 'subscribe_at')
 
 
-class UserSubscriptionCreationSerializer(serializers.ModelSerializer):
+class UserSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSubscription
         fields = ('subscribe_to', )

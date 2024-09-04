@@ -4,6 +4,7 @@ from django.views.decorators.vary import vary_on_headers
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (filters, generics, parsers, permissions, status,
                             viewsets)
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import EventGuests, Events
@@ -87,6 +88,7 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class EventGuestCreateAPIView(generics.CreateAPIView):
+    #надо на вьюсет делать)
     queryset = EventGuests.objects.all()
     serializer_class = EventGuestSerializer
     permission_classes = (permissions.IsAuthenticated, )
