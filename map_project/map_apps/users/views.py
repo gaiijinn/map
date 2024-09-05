@@ -13,9 +13,8 @@ from ..achievements.services.top_users_calculating import TopUsersCalculator
 from .models import User, UserProfile, UserSubscription
 from .serializers import (GetUserSubscriberSerializer, TopUsersSerializer,
                           UserProfileSerializer,
-                          UserSubscriptionCreatingSerializer,
+                          UserSubscriptionCreationSerializer,
                           UserSubscriptionListSerializer)
-from .tasks import get_top_users
 
 # Create your views here.
 
@@ -51,7 +50,7 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return UserSubscriptionCreatingSerializer
+            return UserSubscriptionCreationSerializer
         return self.serializer_class
 
     @handler_success_request_for_achievement_update(achievement_keyword='CS', update_func=progress_updater)

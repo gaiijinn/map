@@ -1,15 +1,1 @@
-[2024-08-31 17:47:03,684 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-08-31 17:54:25,580 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:41:55,444 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:42:18,777 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:47:44,288 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:48:24,719 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:48:30,496 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:48:56,021 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:55:52,400 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:57:19,570 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 18:58:09,870 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 19:02:57,229 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 19:11:53,016 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 19:43:16,843 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
-[2024-09-04 23:44:55,068 - WARNING - achievement_warning - decorators.py - decorators - wrapper] No AchievementsProgressStatus matches the given query. | 
+[2024-09-05 19:50:30,183 - WARNING - achievement_warning - achievement_progress_updater.py - achievement_progress_updater - progress_updater] Achievement progress status not found for user 1 and keyword CS

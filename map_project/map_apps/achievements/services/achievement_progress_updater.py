@@ -1,16 +1,27 @@
-from django.shortcuts import get_object_or_404
+import logging
 
 from ..models import AchievementsProgressStatus
-from .decorators.decorators import handle_msg_log_404
+
+logger_warning = logging.getLogger('achievement_warning')
+
+# @handle_msg_log_404()
+# def progress_updater(achievement_keyword, user_id):
+#     achiev_obj = get_object_or_404(AchievementsProgressStatus, user__id=user_id,
+#                                    achievement__keyword=achievement_keyword)
+#     if not achiev_obj.is_achieved:
+#         achiev_obj.progress_rn += 1
+#         achiev_obj.save()
 
 
-@handle_msg_log_404()
 def progress_updater(achievement_keyword, user_id):
-    achiev_obj = get_object_or_404(AchievementsProgressStatus, user__id=user_id,
-                                   achievement__keyword=achievement_keyword)
-    if not achiev_obj.is_achieved:
-        achiev_obj.progress_rn += 1
-        achiev_obj.save()
+    try:
+        achiev_obj = AchievementsProgressStatus.objects.get(user__id=user_id, achievement__keyword=achievement_keyword)
+        if not achiev_obj.is_achieved:
+            achiev_obj.progress_rn += 1
+            achiev_obj.save()
+    except AchievementsProgressStatus.DoesNotExist:
+        logger_warning.warning(
+            f"Achievement progress status not found for user {user_id} and keyword {achievement_keyword}")
 
 
 def progress_updater_v2(achievement_obj):

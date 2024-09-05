@@ -95,7 +95,7 @@ class GetUserSubscriberSerializer(BaseUserSubscription):
         fields = BaseUserSubscription.Meta.fields + ("user",)
 
 
-class UserSubscriptionCreatingSerializer(serializers.ModelSerializer):
+class UserSubscriptionCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSubscription
         fields = ('subscribe_to', )
