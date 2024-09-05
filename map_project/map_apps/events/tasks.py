@@ -1,7 +1,7 @@
 from celery import shared_task
 
 from .models import Events
-from .services.email_service import EmailController
+from .services.email_service import EmailController, EmailToSubscribers
 from .services.event_service import EventList, EventUpdater, TimeProvider
 
 
@@ -22,3 +22,10 @@ def check_status_events():
 
     updater = EventUpdater(time_provider=time_provider, event_list=event_repository)
     updater.event_update()
+
+
+@shared_task
+def send_email_to_subscribers(event_id):
+    event_obj = Events.objects.get(id=event_id)
+    sender = EmailToSubscribers(event_obj)
+    sender.send_email(event_obj)

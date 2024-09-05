@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+DOMAIN_NAME = "127.0.0.1"
+PORT = "8000"
+
 if DEBUG:
     INTERNAL_IPS = type("c", (), {"__contains__": lambda *a: True})()
 

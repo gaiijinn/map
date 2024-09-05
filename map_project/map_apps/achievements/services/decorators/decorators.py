@@ -1,37 +1,41 @@
 import logging
 from functools import wraps
 
-from django.http import Http404
+from map_apps.achievements.models import AchievementsProgressStatus
 from rest_framework import status
 
 logger_warning = logging.getLogger('achievement_warning')
 logger_info = logging.getLogger('achievement_info')
 
 
-def handle_msg_log_404(message=''):
-    def log_404(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Http404 as error:
-                logger_warning.warning(f"{str(error)} | {message}")
-                raise
-        return wrapper
-    return log_404
+def handle_exceptions(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except AchievementsProgressStatus.DoesNotExist:
+            logger_warning.warning(
+                f"Achievement progress status not found for user and keyword ")
+    return wrapper
 
 
-def handler_success_request_for_achievement_update(achievement_keyword=None, update_func=None):
+def handler_success_request_for_achievement_update(status_codes=None,
+                                                   achievement_keyword=None,
+                                                   update_func=None):
     """
-    This decorator is responsible to handle the request and check it to 200 status code, and then start our
-    'update_func' to update achievement progress.
+    This decorator is responsible for handling the request and checking if its status code is in the list of
+    'status_codes', and then starts our 'update_func' to update achievement progress.
     """
+    if status_codes is None:
+        status_codes = [status.HTTP_200_OK]
+
     def decorator(func):
         @wraps(func)
         def wrapper(self, request, *args, **kwargs):
             response = func(self, request, *args, **kwargs)
-            if response.status_code in [status.HTTP_200_OK, status.HTTP_201_CREATED] and achievement_keyword is not None and update_func:
+            if response.status_code in status_codes and achievement_keyword is not None and update_func:
                 update_func(user_id=request.user.id, achievement_keyword=achievement_keyword)
             return response
         return wrapper
+
     return decorator

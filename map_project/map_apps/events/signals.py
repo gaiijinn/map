@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import EventGuests, Events, EventStatusEmail
-from .tasks import task_event_email
+from .tasks import send_email_to_subscribers, task_event_email
 
 
 @receiver(post_save, sender=Events)
@@ -12,6 +12,8 @@ def after_saving_manipulate(sender, instance, created, **kwargs):
             instance.created_by_org = True
             instance.save()
         EventGuests.objects.create(event=instance, guest=instance.creator)
+        # testing our service
+        send_email_to_subscribers.delay(instance.id)
 
 
 @receiver(post_save, sender=EventStatusEmail)
