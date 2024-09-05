@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.views.generic import TemplateView
 from rest_framework import generics, mixins, parsers, status, viewsets
 from rest_framework.decorators import action
@@ -8,10 +9,13 @@ from ..achievements.services.achievement_progress_updater import \
     progress_updater
 from ..achievements.services.decorators.decorators import \
     handler_success_request_for_achievement_update
+from ..achievements.services.top_users_calculating import TopUsersCalculator
 from .models import User, UserProfile, UserSubscription
-from .serializers import (GetUserSubscriberSerializer, UserProfileSerializer,
+from .serializers import (GetUserSubscriberSerializer, TopUsersSerializer,
+                          UserProfileSerializer,
                           UserSubscriptionCreatingSerializer,
                           UserSubscriptionListSerializer)
+from .tasks import get_top_users
 
 # Create your views here.
 
@@ -61,6 +65,20 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
         subscribers = self.request.user.subscriptions_received.all()
         serializer = self.serializer_class(subscribers, many=True)
         return Response(serializer.data)
+
+
+class TopUsers(generics.ListAPIView):
+    serializer_class = TopUsersSerializer
+
+    def get_queryset(self):
+        result = cache.get('top_users')
+
+        if result is None:
+            users = TopUsersCalculator()
+            result = users.top_user_calculator()
+            cache.set('top_users', result, 60)
+
+        return result
 
 
 class UserProfilePage(TemplateView):

@@ -99,3 +99,11 @@ class UserSubscriptionCreatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSubscription
         fields = ('subscribe_to', )
+
+
+class TopUsersSerializer(BaseUserProfileSerializer):
+    total_exp = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email', 'total_exp')
