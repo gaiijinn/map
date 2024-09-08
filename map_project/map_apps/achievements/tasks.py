@@ -4,7 +4,7 @@ from .models import AchievementsProgressStatus
 from .services.achievement_status_updater import AchievementController
 
 
-@shared_task
+@shared_task()
 def check_achievements_status(obj_id):
     """Task to update achievement status and level calculating"""
 

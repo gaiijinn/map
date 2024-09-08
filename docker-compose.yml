@@ -76,3 +76,24 @@ services:
     depends_on:
       - redis
       - database
+
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A map flower
+    volumes:
+      - ./map_project:/service
+    links:
+      - redis
+    depends_on:
+      - worker
+      - beat
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - '5555:5555'

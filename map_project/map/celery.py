@@ -1,5 +1,4 @@
 import os
-import time
 
 from celery import Celery
 from celery.schedules import crontab
@@ -18,9 +17,9 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {
-    "check_event_status_every_min": {
-        "task": "map_apps.events.tasks.check_status_events",
-        "schedule": crontab(minute="*/1"),
-    },
-}
+# app.conf.beat_schedule = {
+#     "check_event_status_every_min": {
+#         "task": "map_apps.events.tasks.check_status_events",
+#         "schedule": crontab(minute="*/1"),
+#     },
+# }

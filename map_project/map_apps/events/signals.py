@@ -12,8 +12,9 @@ def after_saving_manipulate(sender, instance, created, **kwargs):
             instance.created_by_org = True
             instance.save()
         EventGuests.objects.create(event=instance, guest=instance.creator)
-        # testing our service
-        send_email_to_subscribers.delay(instance.id)
+    else:
+        if instance.result_revue == "approved":
+            send_email_to_subscribers.delay(instance.id)
 
 
 @receiver(post_save, sender=EventStatusEmail)
