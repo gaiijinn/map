@@ -4,17 +4,20 @@ from django.views.decorators.vary import vary_on_headers
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (filters, generics, mixins, parsers, permissions,
                             status, viewsets)
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import EventGuests, Events
+from .models import EventGuests, EventReports, Events
 from .paginators import CustomEventPageNumberPagination
+from .permisions import CustomEventsPermissions
 from .serializers import (EventGuestSerializer, EventListSerializer,
-                          EventRetrieveSerializer)
+                          EventReportSerializer, EventRetrieveSerializer)
 
 # Create your views here.
 
 
-class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+class EventReadOnlyModelViewSet(viewsets.ModelViewSet):
+    permission_classes = (CustomEventsPermissions, )
     queryset = Events.objects.all().order_by("-id")
     pagination_class = CustomEventPageNumberPagination
     filter_backends = (
@@ -59,6 +62,8 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     def get_serializer_class(self):
         if self.action == "retrieve":
             return EventRetrieveSerializer
+        elif self.action == "event_report":
+            return EventReportSerializer
         return EventListSerializer
 
     @method_decorator(cache_page(60 * 5))
@@ -84,6 +89,24 @@ class EventReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     @method_decorator(vary_on_headers("Authorization", "X-Anonymous-User"))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    @action(detail=True, methods=['post'])
+    def event_report(self, request, pk=None):
+        event = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            EventReports.objects.create(
+                event=event,
+                report=validated_data['report'],
+                user=request.user,
+            )
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EventGuestCustomViewSet(mixins.ListModelMixin,

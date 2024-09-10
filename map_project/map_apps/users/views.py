@@ -54,7 +54,7 @@ class UserSubscriptionsModelViewSet(mixins.ListModelMixin,
         return self.serializer_class
 
     @handler_success_request_for_achievement_update(achievement_keyword='CS', update_func=progress_updater,
-                                                    status_codes=[status.HTTP_201_CREATED])
+                                                    status_code=status.HTTP_201_CREATED)
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
@@ -74,9 +74,7 @@ class TopUsers(generics.ListAPIView):
         result = cache.get('top_users')
 
         if result is None:
-            users = TopUsersCalculator()
-            result = users.top_user_calculator()
-            cache.set('top_users', result, 60)
+            return User.objects.none()
 
         return result
 

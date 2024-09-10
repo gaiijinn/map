@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from ..achievements.models import Achievements, AchievementsProgressStatus
@@ -66,6 +66,7 @@ class ModelAchievementsTest(TestCase):
         self.assertEquals(self.user.user_profile.user_level, self.first_lvl)
         self.assertEqual(self.user.achievementsprogressstatus.count(), 1)
 
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_success_update_user_level(self):
         """
         Verifies that the achievement status is correctly updated when progress changes,

@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from ..users.models import User, UserProfile
-from .models import EventGuests, EventImgs, Events, EventType, EventTypes
+from .models import (EventGuests, EventImgs, EventReports, Events, EventType,
+                     EventTypes)
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -16,6 +17,12 @@ class EventTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventTypes
         fields = ("event_type",)
+
+
+class EventReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventReports
+        fields = ('report', )
 
 
 class GuestSerializer(serializers.ModelSerializer):

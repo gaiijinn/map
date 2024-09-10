@@ -7,12 +7,17 @@ class CustomEventsPermissions(BasePermission):
             return True
 
         if request.method == "POST":
-            return request.user.is_authenticated
+            if view.action == "event_report":
+                return request.user.is_authenticated
 
+            return request.user.is_authenticated
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
+
+        if view.action in ['event_report']:
+            return request.user.is_authenticated
 
         return obj.creator == request.user
